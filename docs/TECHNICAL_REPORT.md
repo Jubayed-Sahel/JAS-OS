@@ -58,7 +58,7 @@ and asynchronous output could hide the most relevant result.
 live proof before running the chapter demonstration.
 
 **Result:** The project now provides a clear viva route and a readable live demo.
-The submitted 2:26 video follows this same workflow.
+The submitted 4:17 narrated 1080p video follows this same workflow.
 
 ## STAR challenge 4: A dependable stop command
 
@@ -80,7 +80,7 @@ terminal activity while the shell remains READY.
 - ISO: 1,523,712 bytes.
 - ISO SHA-256: `2B5A69F0D4CF0BC80321FCA6C608B1B73E16B44074966462E49EEB870043B6EF`.
 - VM: 32-bit BIOS, 1024x768 framebuffer, PS/2 input.
-- Demo: authentic 2:26 Oracle VirtualBox WebM recording.
+- Demo: 4:17 narrated 1080p MP4 built from authentic Oracle VirtualBox captures.
 
 ## Limitations
 

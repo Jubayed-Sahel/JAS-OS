@@ -9,7 +9,8 @@
 - [x] GitHub repository folder with source code
 - [x] Short project introduction in the main [README](README.md)
 - [x] 2-5 minute project demonstration
-  - [2:26 VirtualBox WebM recording](docs/JAS-OS-demo.webm)
+  - [4:17 narrated 1080p MP4 demonstration](docs/JAS-OS-demo.mp4)
+  - [Editable demonstration presentation](docs/JAS-OS-Demonstration.pptx)
   - [Timed narration script](docs/DEMO_SCRIPT.md)
 - [x] Bootable [JAS OS ISO](jas-os.iso)
 - [x] Real VM screenshot in `docs/assets/teacher-guide.png`
@@ -29,7 +30,9 @@
 - [x] Terminal presentation mode visible at 1024x768
 - [x] Global stop command retains the terminal shell
 - [x] Report rendered to six pages and visually inspected
-- [x] Video duration verified as 2:26
+- [x] Video duration verified as 4:17
+- [x] Video frames verified at 1920×1080 with one JAS OS screen per scene
+- [x] Narration audio track verified
 
 ISO SHA-256:
 

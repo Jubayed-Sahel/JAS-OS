@@ -17,7 +17,7 @@ Chapter 14 onward is intentionally outside the project scope.
 | Deliverable | Link |
 |---|---|
 | Bootable operating system | [Download `jas-os.iso`](jas-os.iso) |
-| 2:26 VM demonstration | [Watch/download the WebM demo](docs/JAS-OS-demo.webm) |
+| 4:17 narrated demonstration | [Watch/download the 1080p MP4 demo](docs/JAS-OS-demo.mp4) · [Editable presentation](docs/JAS-OS-Demonstration.pptx) |
 | Technical report | [PDF](docs/JAS-OS-Technical-Report.pdf) · [Editable DOCX](docs/JAS-OS-Technical-Report.docx) · [GitHub-readable STAR report](docs/TECHNICAL_REPORT.md) |
 | Presentation support | [Timed narration and command script](docs/DEMO_SCRIPT.md) |
 | Architecture | [System architecture notes](docs/ARCHITECTURE.md) |
