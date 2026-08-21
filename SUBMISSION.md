@@ -10,13 +10,10 @@
 - [x] Short project introduction in the main [README](README.md)
 - [x] 2-5 minute project demonstration
   - [4:20 narrated 1080p MP4 demonstration](docs/JAS-OS-demo.mp4)
-  - [4:00 silent terminal-and-cursor MP4](docs/JAS-OS-Silent-Terminal-Demo.mp4)
-  - [Voice-over script for the silent demo](docs/SILENT_DEMO_VOICEOVER_SCRIPT.md)
-  - [Raw VirtualBox WebM recording](docs/JAS-OS-Silent-Terminal-Demo.webm)
   - [Editable demonstration presentation](docs/JAS-OS-Demonstration.pptx)
   - [Timed narration script](docs/DEMO_SCRIPT.md)
 - [x] Bootable [JAS OS ISO](jas-os.iso)
-- [x] Real VM screenshot in `docs/assets/understanding-guide.png`
+- [x] Real VM screenshots in `docs/assets/demo/`
 
 ## Submission identity
 
@@ -30,7 +27,7 @@
 
 - [x] Clean `i686-elf-gcc` build with no warnings or errors
 - [x] Bootable ISO generated and mounted successfully in Oracle VirtualBox
-- [x] Terminal understanding-evidence mode visible at 1024x768
+- [x] Terminal feature guide visible at 1024x768
 - [x] Global stop command retains the terminal shell
 - [x] Report rendered to six pages and visually inspected
 - [x] Video duration verified as 4:20

@@ -2,24 +2,21 @@
 
 ![Version](https://img.shields.io/badge/version-1.5.4-0f766e)
 ![Architecture](https://img.shields.io/badge/architecture-i686-334155)
-![Course](https://img.shields.io/badge/CSE_323-chapters_1--13-2563eb)
+![Platform](https://img.shields.io/badge/platform-freestanding_x86-2563eb)
 ![Build](https://img.shields.io/badge/build-passing-15803d)
 
 JAS OS is a bootable, freestanding 32-bit x86 course-project operating system
-created by **Jubayed Ahmed Sahel** for CSE 323. Its motive is to implement, test,
-and prove my own understanding of the main lecture concepts from chapters 1-13
-through observable kernel behavior in Oracle VirtualBox. It is not intended as
-a system for teaching other people. Chapter 14 onward is outside the scope.
-
-![JAS OS understanding guide](docs/assets/understanding-guide.png)
+created by **Jubayed Ahmed Sahel** for CSE 323. It boots from an ISO in Oracle
+VirtualBox and exposes its kernel subsystems through a graphical desktop,
+terminal, OS Lab, and live status views.
 
 ## Submission package
 
 | Deliverable | Link |
 |---|---|
 | Bootable operating system | [Download `jas-os.iso`](jas-os.iso) |
-| Demonstration videos | [4:20 narrated overview](docs/JAS-OS-demo.mp4) · [4:00 silent terminal-and-cursor demo](docs/JAS-OS-Silent-Terminal-Demo.mp4) · [voice-over script](docs/SILENT_DEMO_VOICEOVER_SCRIPT.md) |
-| Editable demonstration | [PowerPoint with narration](docs/JAS-OS-Demonstration.pptx) · [raw VirtualBox WebM](docs/JAS-OS-Silent-Terminal-Demo.webm) |
+| Demonstration video | [4:20 narrated overview](docs/JAS-OS-demo.mp4) |
+| Editable demonstration | [PowerPoint with narration](docs/JAS-OS-Demonstration.pptx) |
 | Technical report | [PDF](docs/JAS-OS-Technical-Report.pdf) · [Editable DOCX](docs/JAS-OS-Technical-Report.docx) · [GitHub-readable STAR report](docs/TECHNICAL_REPORT.md) |
 | Presentation support | [Timed narration and command script](docs/DEMO_SCRIPT.md) |
 | Architecture | [System architecture notes](docs/ARCHITECTURE.md) |
@@ -29,21 +26,20 @@ Repository: <https://github.com/Jubayed-Sahel/JAS-OS>
 
 ## What is implemented
 
-| Chapter | Main concept | Live proof |
-|---:|---|---|
-| 1 | OS organization and resources | `present 1` |
-| 2 | Services, syscalls, and boot | `present 2` |
-| 3 | Processes and IPC | `present 3` |
-| 4 | Threads and shared state | `present 4` |
-| 5 | CPU scheduling | `present 5` |
-| 6 | Synchronization | `present 6` |
-| 7 | Deadlocks | `present 7` |
-| 8 | Main-memory allocation | `present 8` |
-| 9 | Virtual memory | `present 9` |
-| 10 | File-system interface | `present 10` |
-| 11 | File-system implementation | `present 11` |
-| 12 | Mass storage | `present 12` |
-| 13 | I/O systems | `present 13` |
+| Feature | Live proof |
+|---|---|
+| OS organization and resources | `status` / `sysinfo` |
+| Services, syscalls, and boot | `services` / `syscall` / `boot` |
+| Processes and IPC | `tasks` / `ipc demo` |
+| Threads and shared state | `thread demo` / `thread status` |
+| CPU scheduling | `schedule status` / `timeline` |
+| Synchronization | `start` / `rw demo` |
+| Deadlock avoidance | `banker status` / `banker safe` |
+| Main-memory allocation | `mem test` / `fit demo` |
+| Virtual memory | `page demo` / `replace demo` |
+| File system | `fsinfo` / `fsalloc demo` |
+| Mass storage | `disk demo` / `raid` |
+| I/O systems | `io demo` / `io status` |
 
 The algorithms are backed by separate kernel modules rather than static GUI
 labels. Live output includes task IDs and states, CPU slices, semaphore values,
@@ -54,14 +50,14 @@ metadata, disk-head movement, and I/O counters.
 
 - **Files** - browse, create, open, and delete MiniFS entries.
 - **Notes** - edit files stored in MiniFS.
-- **Terminal** - high-contrast shell with understanding Guide, Lectures, scrolling, and STOP.
+- **Terminal** - high-contrast shell with Feature Guide, Modules, scrolling, and STOP.
 - **Task Manager** - inspect processes and terminate a selected task.
 - **Calculator** - perform signed integer arithmetic.
 - **Settings** - change wallpaper and CPU scheduling policy.
 - **Clock** - view PIT-driven uptime and use a stopwatch.
-- **OS Lab** - run my chapter 1-13 implementations and inspect their evidence.
+- **OS Lab** - run kernel features and inspect their live state.
 
-## Understanding evidence mode
+## Feature demonstration mode
 
 Open Terminal and click **Guide**, or type:
 
@@ -69,13 +65,11 @@ Open Terminal and click **Guide**, or type:
 guide
 ```
 
-These commands help me demonstrate what I understand during assessment:
+These commands provide a short path through the implemented features:
 
 ```text
-explain 5    # state my understanding and implementation without changing state
-present 5    # state my understanding, then run the live kernel proof
 stop         # terminate all background activity but keep the shell responsive
-lectures     # show the complete chapter-to-command map
+modules      # show the complete feature-to-command map
 ```
 
 `stop`, `stop all`, and `lab stop` are global emergency-stop aliases. Specific
@@ -137,7 +131,7 @@ SHA-256  CC89E64B14337AFAE5DAEE51B2C7A059C92BE3D808551495B41C981EAF17A2C1
 ## Terminal command reference
 
 ```text
-guide / understanding / explain 1..13 / present 1..13 / lectures
+guide / modules
 status / services / boot / syscall
 tasks / create counter / ipc demo / thread demo|status|stop
 schedule rr|priority|fcfs|sjf / priority ID 0..9 / burst ID TICKS / timeline
@@ -156,8 +150,8 @@ stop / stop all / lab stop / clear / reboot / shutdown
 
 JAS OS is a course-project kernel, not a production OS. Tasks are cooperative
 step functions; applications execute in kernel space; MiniFS is RAM-backed for
-the VM session; and paging, disk, RAID, and I/O are transparent models used to
-test my understanding. The project does not claim user-mode isolation,
+the VM session; and paging, disk, RAID, and I/O are transparent software models.
+The project does not claim user-mode isolation,
 networking, a real disk driver, or production security.
 
 ## Author

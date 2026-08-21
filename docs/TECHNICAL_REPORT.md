@@ -137,8 +137,6 @@ background activity while the shell remains ready for the next command.
 - Bootable ISO: [`jas-os.iso`](../jas-os.iso)
 - Narrated demonstration: [`JAS-OS-demo.mp4`](JAS-OS-demo.mp4)
 - Demonstration script: [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md)
-- Silent terminal-and-cursor demonstration: [`JAS-OS-Silent-Terminal-Demo.mp4`](JAS-OS-Silent-Terminal-Demo.mp4)
-- Add-your-own-voice script: [`SILENT_DEMO_VOICEOVER_SCRIPT.md`](SILENT_DEMO_VOICEOVER_SCRIPT.md)
 
 ## 8. Limitations and scope boundary
 
