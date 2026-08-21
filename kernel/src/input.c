@@ -17,6 +17,9 @@ static bool s_left_pressed, s_left_released;
 static int s_max_x = 1024, s_max_y = 768;
 static uint8_t s_mouse_cycle;
 static uint8_t s_mouse_bytes[3];
+static volatile bool s_demo_pointer_active;
+static volatile int s_demo_target_x, s_demo_target_y;
+static uint32_t s_demo_pointer_next_ms;
 
 static const char kbd_map[128] = {
     0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',
@@ -129,6 +132,7 @@ void mouse_irq(void)
         }
         int dx = (int8_t)s_mouse_bytes[1];
         int dy = (int8_t)s_mouse_bytes[2];
+        s_demo_pointer_active = false;
         if (flags & 0x40) dx = 0;
         if (flags & 0x80) dy = 0;
         if (dx > 40) dx = 40;
@@ -176,6 +180,18 @@ void mouse_set_bounds(int width, int height)
     s_max_y = height;
 }
 
+void mouse_demo_target(int x, int y)
+{
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    if (x > s_max_x - 2) x = s_max_x - 2;
+    if (y > s_max_y - 2) y = s_max_y - 2;
+    s_demo_target_x = x;
+    s_demo_target_y = y;
+    s_demo_pointer_next_ms = now_ms();
+    s_demo_pointer_active = true;
+}
+
 void input_begin_frame(void)
 {
     irq_disable();
@@ -188,4 +204,19 @@ void input_begin_frame(void)
     s_left_pressed = presses > 0 || (left && !s_left_prev);
     s_left_released = releases > 0 || (!left && s_left_prev);
     s_left_prev = left;
+
+    if (s_demo_pointer_active && now_ms() >= s_demo_pointer_next_ms) {
+        const int step = 8;
+        int dx = s_demo_target_x - s_mx;
+        int dy = s_demo_target_y - s_my;
+        if (dx > step) dx = step;
+        if (dx < -step) dx = -step;
+        if (dy > step) dy = step;
+        if (dy < -step) dy = -step;
+        s_mx += dx;
+        s_my += dy;
+        s_demo_pointer_next_ms = now_ms() + 16u;
+        if (s_mx == s_demo_target_x && s_my == s_demo_target_y)
+            s_demo_pointer_active = false;
+    }
 }

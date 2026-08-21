@@ -1530,8 +1530,9 @@ void gui_tick(void)
         s_cur_x = mx;
         s_cur_y = my;
     } else if (mx != s_cur_x || my != s_cur_y) {
-        cursor_draw(mx, my);
-        s_cur_x = mx;
-        s_cur_y = my;
+        /* Defer pointer painting to the normal dirty-frame path.  This keeps
+         * cursor restoration and desktop presentation in one atomic frame
+         * when VirtualBox delivers a burst of relative PS/2 packets. */
+        s_dirty = true;
     }
 }

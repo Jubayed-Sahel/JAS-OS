@@ -11,6 +11,7 @@
 #include "event_log.h"
 #include "filesystem.h"
 #include "hw.h"
+#include "input.h"
 #include "klib.h"
 #include "lecture.h"
 #include "memory.h"
@@ -21,6 +22,22 @@
 
 static char s_cwd[MINIFS_PATH_LENGTH] = "/";
 static uint32_t s_shell_task_id;
+
+static bool move_demo_pointer(const char *target)
+{
+    int x = 620, y = 300;
+    if (kstrcmp(target, "files") == 0) { x = 88; y = 84; }
+    else if (kstrcmp(target, "notes") == 0) { x = 88; y = 126; }
+    else if (kstrcmp(target, "settings") == 0) { x = 88; y = 294; }
+    else if (kstrcmp(target, "clock") == 0) { x = 88; y = 336; }
+    else if (kstrcmp(target, "oslab") == 0) { x = 88; y = 378; }
+    else if (kstrcmp(target, "guide") == 0) { x = 880; y = 105; }
+    else if (kstrcmp(target, "stop") == 0) { x = 932; y = 105; }
+    else if (kstrcmp(target, "terminal") != 0) return false;
+    mouse_demo_target(x, y);
+    kprintf("  [POINTER] Moving to %s.\n", target);
+    return true;
+}
 
 /* Visible "syscall" demo slots (malloc/free evidence for the course concepts). */
 static void *s_sys_ptr[4];
@@ -150,6 +167,7 @@ static void print_help(void)
     print_title("?", "COMMAND CENTER", "Run my CSE323 implementations and inspect their state");
     kprintf("  UNDERSTANDING  guide / explain CH / present CH\n");
     kprintf("                Example: present 5\n\n");
+    kprintf("  DEMO POINTER   pointer guide|stop|files|notes|settings|clock|oslab|terminal\n\n");
     kprintf("  LECTURE MAP (chapters 1-13; chapter 14 onward excluded)\n");
     kprintf("  Overview      lectures / services / boot\n");
     kprintf("  Processes     tasks / create counter / ipc / thread demo\n");
@@ -1274,6 +1292,10 @@ void commands_execute(const char *raw)
     if (*p == 0) return;
 
     if (kstrcmp(p, "help") == 0) print_help();
+    else if (kstrncmp(p, "pointer ", 8) == 0) {
+        if (!move_demo_pointer(p + 8))
+            print_warning("Usage: pointer guide|stop|files|notes|settings|clock|oslab|terminal");
+    }
     else if (kstrcmp(p, "understanding") == 0 || kstrcmp(p, "viva") == 0 ||
              kstrcmp(p, "guide") == 0) print_understanding_guide();
     else if (kstrncmp(p, "explain ", 8) == 0) {

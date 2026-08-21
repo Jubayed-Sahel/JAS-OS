@@ -18,7 +18,8 @@ a system for teaching other people. Chapter 14 onward is outside the scope.
 | Deliverable | Link |
 |---|---|
 | Bootable operating system | [Download `jas-os.iso`](jas-os.iso) |
-| 4:20 narrated demonstration | [Watch/download the 1080p MP4 demo](docs/JAS-OS-demo.mp4) · [Editable presentation](docs/JAS-OS-Demonstration.pptx) |
+| Demonstration videos | [4:20 narrated overview](docs/JAS-OS-demo.mp4) · [4:00 silent terminal-and-cursor demo](docs/JAS-OS-Silent-Terminal-Demo.mp4) · [voice-over script](docs/SILENT_DEMO_VOICEOVER_SCRIPT.md) |
+| Editable demonstration | [PowerPoint with narration](docs/JAS-OS-Demonstration.pptx) · [raw VirtualBox WebM](docs/JAS-OS-Silent-Terminal-Demo.webm) |
 | Technical report | [PDF](docs/JAS-OS-Technical-Report.pdf) · [Editable DOCX](docs/JAS-OS-Technical-Report.docx) · [GitHub-readable STAR report](docs/TECHNICAL_REPORT.md) |
 | Presentation support | [Timed narration and command script](docs/DEMO_SCRIPT.md) |
 | Architecture | [System architecture notes](docs/ARCHITECTURE.md) |
@@ -130,7 +131,7 @@ The build generates `build/jas-os.iso` and compatibility copies for older
 VirtualBox attachments. The verified submission ISO is 1,523,712 bytes with:
 
 ```text
-SHA-256  7C6198C6FF5BF41AEF946BB619F5B148DC93A03673FBCEC630818C2371AC8C3E
+SHA-256  CC89E64B14337AFAE5DAEE51B2C7A059C92BE3D808551495B41C981EAF17A2C1
 ```
 
 ## Terminal command reference

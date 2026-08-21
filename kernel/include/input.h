@@ -18,6 +18,7 @@ bool mouse_right(void);
 bool mouse_left_pressed(void);   /* edge: down this frame */
 bool mouse_left_released(void);
 void mouse_set_bounds(int width, int height);
+void mouse_demo_target(int x, int y);
 void input_begin_frame(void);
 
 #endif

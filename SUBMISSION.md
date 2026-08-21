@@ -10,6 +10,9 @@
 - [x] Short project introduction in the main [README](README.md)
 - [x] 2-5 minute project demonstration
   - [4:20 narrated 1080p MP4 demonstration](docs/JAS-OS-demo.mp4)
+  - [4:00 silent terminal-and-cursor MP4](docs/JAS-OS-Silent-Terminal-Demo.mp4)
+  - [Voice-over script for the silent demo](docs/SILENT_DEMO_VOICEOVER_SCRIPT.md)
+  - [Raw VirtualBox WebM recording](docs/JAS-OS-Silent-Terminal-Demo.webm)
   - [Editable demonstration presentation](docs/JAS-OS-Demonstration.pptx)
   - [Timed narration script](docs/DEMO_SCRIPT.md)
 - [x] Bootable [JAS OS ISO](jas-os.iso)
@@ -37,5 +40,5 @@
 ISO SHA-256:
 
 ```text
-7C6198C6FF5BF41AEF946BB619F5B148DC93A03673FBCEC630818C2371AC8C3E
+CC89E64B14337AFAE5DAEE51B2C7A059C92BE3D808551495B41C981EAF17A2C1
 ```

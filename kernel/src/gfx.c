@@ -459,11 +459,10 @@ void cursor_draw(int x, int y)
 {
     int nw = 12, nh = 16;
     if (s_cx >= 0) {
-        int rx = s_cx < x ? s_cx : x;
-        int ry = s_cy < y ? s_cy : y;
-        int r2 = (s_cx + s_cw > x + nw) ? s_cx + s_cw : x + nw;
-        int r3 = (s_cy + s_ch > y + nh) ? s_cy + s_ch : y + nh;
-        gfx_present_rect(rx, ry, r2 - rx, r3 - ry);
+        /* Only restore the pixels covered by the previous cursor.  Restoring
+         * the union of the old and new positions makes a large framebuffer
+         * copy when PS/2 packets jump, which can visibly wipe the desktop. */
+        gfx_present_rect(s_cx, s_cy, s_cw, s_ch);
     }
     s_cx = x;
     s_cy = y;
