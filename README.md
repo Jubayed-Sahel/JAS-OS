@@ -1,23 +1,24 @@
 # JAS OS
 
-![Version](https://img.shields.io/badge/version-1.5.3-0f766e)
+![Version](https://img.shields.io/badge/version-1.5.4-0f766e)
 ![Architecture](https://img.shields.io/badge/architecture-i686-334155)
 ![Course](https://img.shields.io/badge/CSE_323-chapters_1--13-2563eb)
 ![Build](https://img.shields.io/badge/build-passing-15803d)
 
-JAS OS is a bootable, freestanding 32-bit x86 educational operating system
-created by **Jubayed Ahmed Sahel** for CSE 323. It turns the main ideas from
-chapters 1-13 into observable kernel behavior inside Oracle VirtualBox.
-Chapter 14 onward is intentionally outside the project scope.
+JAS OS is a bootable, freestanding 32-bit x86 course-project operating system
+created by **Jubayed Ahmed Sahel** for CSE 323. Its motive is to implement, test,
+and prove my own understanding of the main lecture concepts from chapters 1-13
+through observable kernel behavior in Oracle VirtualBox. It is not intended as
+a system for teaching other people. Chapter 14 onward is outside the scope.
 
-![JAS OS teacher terminal](docs/assets/teacher-guide.png)
+![JAS OS understanding guide](docs/assets/understanding-guide.png)
 
 ## Submission package
 
 | Deliverable | Link |
 |---|---|
 | Bootable operating system | [Download `jas-os.iso`](jas-os.iso) |
-| 4:17 narrated demonstration | [Watch/download the 1080p MP4 demo](docs/JAS-OS-demo.mp4) · [Editable presentation](docs/JAS-OS-Demonstration.pptx) |
+| 4:20 narrated demonstration | [Watch/download the 1080p MP4 demo](docs/JAS-OS-demo.mp4) · [Editable presentation](docs/JAS-OS-Demonstration.pptx) |
 | Technical report | [PDF](docs/JAS-OS-Technical-Report.pdf) · [Editable DOCX](docs/JAS-OS-Technical-Report.docx) · [GitHub-readable STAR report](docs/TECHNICAL_REPORT.md) |
 | Presentation support | [Timed narration and command script](docs/DEMO_SCRIPT.md) |
 | Architecture | [System architecture notes](docs/ARCHITECTURE.md) |
@@ -52,26 +53,26 @@ metadata, disk-head movement, and I/O counters.
 
 - **Files** - browse, create, open, and delete MiniFS entries.
 - **Notes** - edit files stored in MiniFS.
-- **Terminal** - high-contrast shell with Guide, Lectures, scrolling, and STOP.
+- **Terminal** - high-contrast shell with understanding Guide, Lectures, scrolling, and STOP.
 - **Task Manager** - inspect processes and terminate a selected task.
 - **Calculator** - perform signed integer arithmetic.
 - **Settings** - change wallpaper and CPU scheduling policy.
 - **Clock** - view PIT-driven uptime and use a stopwatch.
-- **OS Lab** - run chapter 1-13 presentations with one click.
+- **OS Lab** - run my chapter 1-13 implementations and inspect their evidence.
 
-## Teacher demonstration mode
+## Understanding evidence mode
 
 Open Terminal and click **Guide**, or type:
 
 ```text
-teacher
+guide
 ```
 
-The presentation commands are designed for a viva or classroom explanation:
+These commands help me demonstrate what I understand during assessment:
 
 ```text
-explain 5    # explain the concept and implementation without changing state
-present 5    # explain Chapter 5, then run its live kernel proof
+explain 5    # state my understanding and implementation without changing state
+present 5    # state my understanding, then run the live kernel proof
 stop         # terminate all background activity but keep the shell responsive
 lectures     # show the complete chapter-to-command map
 ```
@@ -129,13 +130,13 @@ The build generates `build/jas-os.iso` and compatibility copies for older
 VirtualBox attachments. The verified submission ISO is 1,523,712 bytes with:
 
 ```text
-SHA-256  2B5A69F0D4CF0BC80321FCA6C608B1B73E16B44074966462E49EEB870043B6EF
+SHA-256  7C6198C6FF5BF41AEF946BB619F5B148DC93A03673FBCEC630818C2371AC8C3E
 ```
 
 ## Terminal command reference
 
 ```text
-teacher / explain 1..13 / present 1..13 / lectures
+guide / understanding / explain 1..13 / present 1..13 / lectures
 status / services / boot / syscall
 tasks / create counter / ipc demo / thread demo|status|stop
 schedule rr|priority|fcfs|sjf / priority ID 0..9 / burst ID TICKS / timeline
@@ -150,13 +151,13 @@ calc A OP B / notes / note write|read|append|delete
 stop / stop all / lab stop / clear / reboot / shutdown
 ```
 
-## Educational boundaries
+## Course-project boundaries
 
-JAS OS is a teaching kernel, not a production OS. Tasks are cooperative step
-functions; applications execute in kernel space; MiniFS is RAM-backed for the
-VM session; and paging, disk, RAID, and I/O commands are transparent teaching
-models. The project does not claim user-mode isolation, networking, a real disk
-driver, or production security.
+JAS OS is a course-project kernel, not a production OS. Tasks are cooperative
+step functions; applications execute in kernel space; MiniFS is RAM-backed for
+the VM session; and paging, disk, RAID, and I/O are transparent models used to
+test my understanding. The project does not claim user-mode isolation,
+networking, a real disk driver, or production security.
 
 ## Author
 

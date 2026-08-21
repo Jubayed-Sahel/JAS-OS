@@ -465,9 +465,9 @@ static void term_command(const char *cmd)
     } else if (kstrcmp(cmd, "__term_lectures") == 0) {
         s_term_scroll = 0;
         commands_execute("lectures");
-    } else if (kstrcmp(cmd, "__term_teacher") == 0) {
+    } else if (kstrcmp(cmd, "__term_guide") == 0) {
         s_term_scroll = 0;
-        commands_execute("teacher");
+        commands_execute("guide");
     } else if (kstrcmp(cmd, "__term_stop") == 0) {
         s_term_scroll = 0;
         commands_execute("stop");
@@ -496,7 +496,7 @@ static void draw_term(window_t *w)
     right -= 54;
     draw_btn(right - 44, y + 4, 44, 22, "STOP", BTN_DANGER, "__term_stop");
     right -= 50;
-    draw_btn(right - 48, y + 4, 48, 22, "Guide", BTN_ACCENT, "__term_teacher");
+    draw_btn(right - 48, y + 4, 48, 22, "Guide", BTN_ACCENT, "__term_guide");
     right -= 54;
     draw_btn(right - 68, y + 4, 68, 22, "Lectures", BTN_NORMAL, "__term_lectures");
     right -= 74;
@@ -1144,16 +1144,16 @@ static void lab_command(const char *cmd)
     int chapter = tagged_id(cmd, "__lab_");
     if (chapter < 1 || chapter > 13) return;
     open_window(WIN_TERM);
-    char presentation[24];
-    ksnprintf(presentation, sizeof(presentation), "present %d", chapter);
-    kprintf("\n[OS LAB] Teacher presentation - Chapter %d\n", chapter);
-    commands_execute(presentation);
+    char evidence[24];
+    ksnprintf(evidence, sizeof(evidence), "present %d", chapter);
+    kprintf("\n[OS LAB] My understanding evidence - Chapter %d\n", chapter);
+    commands_execute(evidence);
 }
 
 static void draw_lab(window_t *w)
 {
     int x = w->x + 16, y = w->y + TITLE_H + 12;
-    gfx_text(x, y, "Click a lecture to run its main demonstration in Terminal.", COL_INK2);
+    gfx_text(x, y, "Click a lecture concept to run my implementation in Terminal.", COL_INK2);
     y += 22;
     static const char *labels[] = {
         "01  OS Overview", "02  Services + Boot", "03  Processes + IPC",
@@ -1456,8 +1456,8 @@ void gui_init(void)
     terminal_clear();
     kprintf("JAS OS x86 v%s ready.\n", KERNEL_VERSION);
     kprintf("Sidebar: Files | Notes | Terminal | Tasks | Calc | Settings | Clock | OS Lab\n");
-    kprintf("Teacher demo mode is ready - click Guide or type teacher\n");
-    kprintf("Use present 1..13 to explain and run each lecture feature\n");
+    kprintf("Understanding guide is ready - click Guide or type guide\n");
+    kprintf("Use present 1..13 to prove each implemented lecture concept\n");
 
     s_splash = true;
     s_splash_start = now_ms();

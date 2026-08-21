@@ -2,7 +2,7 @@
  * commands.c - JAS OS x86 command interpreter.
  *
  * Mirrors the ESP32-S3 CSE323 project's shell (Project/main/shell.c):
- * the same command set and the same presentation style (title rules,
+ * the same command set and the same evidence style (title rules,
  * [OK]/[!]/[X] prefixes, aligned tables) rendered as plain text.
  */
 #include "commands.h"
@@ -22,7 +22,7 @@
 static char s_cwd[MINIFS_PATH_LENGTH] = "/";
 static uint32_t s_shell_task_id;
 
-/* Teaching "syscall" demo slots (visible malloc/free for lecture). */
+/* Visible "syscall" demo slots (malloc/free evidence for the course concepts). */
 static void *s_sys_ptr[4];
 static size_t s_sys_sz[4];
 
@@ -36,7 +36,7 @@ uint32_t commands_shell_task_id(void) { return s_shell_task_id; }
 void commands_set_shell_task_id(uint32_t id) { s_shell_task_id = id; }
 
 /* ------------------------------------------------------------------ */
-/* Presentation helpers (same structure as the 323 shell, no ANSI).   */
+/* Evidence helpers (same structure as the 323 shell, no ANSI).       */
 
 static void print_rule(void)
 {
@@ -147,8 +147,8 @@ static void print_syscall_help(void)
 
 static void print_help(void)
 {
-    print_title("?", "COMMAND CENTER", "CSE323 lecture demos live in this Terminal");
-    kprintf("  PRESENTATION  teacher / explain CH / present CH\n");
+    print_title("?", "COMMAND CENTER", "Run my CSE323 implementations and inspect their state");
+    kprintf("  UNDERSTANDING  guide / explain CH / present CH\n");
     kprintf("                Example: present 5\n\n");
     kprintf("  LECTURE MAP (chapters 1-13; chapter 14 onward excluded)\n");
     kprintf("  Overview      lectures / services / boot\n");
@@ -318,9 +318,12 @@ static bool execute_syscall(const char *args)
 
 static void print_about(void)
 {
-    print_title("*", "JAS OS - X86 EDUCATIONAL KERNEL", "A custom cooperative kernel on bare-metal i686");
+    print_title("*", "JAS OS - X86 COURSE CONCEPT KERNEL", "My implementation of CSE323 concepts on bare-metal i686");
+    kprintf("\n  PROJECT MOTIVE\n");
+    kprintf("  Build and test the lecture concepts myself so I can prove that I\n");
+    kprintf("  understand how the algorithms change real kernel state.\n");
     kprintf("\n  WHAT I BUILT\n");
-    kprintf("  A visible OS learning platform where every scheduling decision,\n");
+    kprintf("  A visible OS implementation where every scheduling decision,\n");
     kprintf("  task state, allocation, resource request, and file is inspectable.\n\n");
     kprintf("  CORE MODULES (CSE323 through chapter 13)\n");
     kprintf("  [01] Multi-policy scheduler  [04] Banker's deadlock avoidance\n");
@@ -349,7 +352,7 @@ static void print_dashboard(void)
     const unsigned free_percent = stats.heap_size == 0 ? 0U :
         (unsigned)((stats.free_bytes * 100U) / stats.heap_size);
 
-    print_title("#", "LIVE KERNEL DASHBOARD", "Presentation mode - real-time subsystem summary");
+    print_title("#", "LIVE KERNEL DASHBOARD", "Understanding evidence - real-time subsystem state");
     kprintf("\n  SCHEDULER                 MEMORY\n");
     kprintf("  Active tasks   %-2u / %-2u    Heap free      %5u B\n",
             (unsigned)task_active_count(), (unsigned)KERNEL_MAX_TASKS, (unsigned)stats.free_bytes);
@@ -809,7 +812,7 @@ static void stop_all_labs(void)
     if (demo_stop_producer_consumer()) stopped = true;
 
     /* Counter tasks and future background demos may not belong to a named lab.
-       Stop every non-shell task so `stop` is a dependable presentation panic key. */
+       Stop every non-shell task so `stop` is dependable during assessment. */
     kernel_task_t *tasks = task_table();
     for (size_t i = 0; i < KERNEL_MAX_TASKS; ++i) {
         if (tasks[i].state == TASK_UNUSED || tasks[i].state == TASK_FINISHED ||
@@ -1161,7 +1164,7 @@ static void execute_notes(const char *line)
 }
 
 /* ------------------------------------------------------------------ */
-/* Teacher-facing presentation mode.                                  */
+/* Understanding and assessment evidence mode.                        */
 
 static const char *s_chapter_title[] = {
     "", "OS OVERVIEW", "OS SERVICES + BOOT", "PROCESSES + IPC",
@@ -1208,9 +1211,9 @@ static const char *s_chapter_command[] = {
     "fsalloc demo", "disk demo", "io demo"
 };
 
-static void print_teacher_guide(void)
+static void print_understanding_guide(void)
 {
-    print_title("T", "TEACHER DEMO GUIDE", "A short, explainable tour of JAS OS");
+    print_title("U", "MY UNDERSTANDING GUIDE", "How I prove each CSE323 concept with live kernel state");
     kprintf("  1  Start with:  present 1     kernel overview and live resources\n");
     kprintf("  2  Continue:    present 2     boot path and OS services\n");
     kprintf("  3  Core jobs:   present 3     processes and IPC\n");
@@ -1219,12 +1222,12 @@ static void print_teacher_guide(void)
     kprintf("  6  Safety:      present 7     Banker's safe state\n");
     kprintf("  7  Storage:     present 10    real file interface\n");
     kprintf("  8  Finish:      present 12 / present 13\n\n");
-    kprintf("  present CH  explains the feature, names its implementation, then runs it.\n");
-    kprintf("  explain CH  shows talking points without changing any running lab.\n");
+    kprintf("  present CH  states what I understand, then runs my implementation.\n");
+    kprintf("  explain CH  shows my concept and implementation without changing state.\n");
     kprintf("  lectures    shows the complete chapter-to-command map.\n");
     kprintf("  stop        immediately ends all terminal background activity.\n");
     print_rule();
-    kprintf("  Suggested sentence: 'This output is generated by my kernel module,\n");
+    kprintf("  Evidence statement: 'This output is generated by my kernel module,\n");
     kprintf("  not hard-coded UI; the counters and states change while tasks run.'\n");
 }
 
@@ -1271,8 +1274,8 @@ void commands_execute(const char *raw)
     if (*p == 0) return;
 
     if (kstrcmp(p, "help") == 0) print_help();
-    else if (kstrcmp(p, "teacher") == 0 || kstrcmp(p, "viva") == 0 ||
-             kstrcmp(p, "guide") == 0) print_teacher_guide();
+    else if (kstrcmp(p, "understanding") == 0 || kstrcmp(p, "viva") == 0 ||
+             kstrcmp(p, "guide") == 0) print_understanding_guide();
     else if (kstrncmp(p, "explain ", 8) == 0) {
         unsigned chapter;
         if (valid_chapter_argument(p + 8, &chapter)) explain_chapter(chapter);

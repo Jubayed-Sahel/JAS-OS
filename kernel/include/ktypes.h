@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 
-#define KERNEL_VERSION "1.5.3"
+#define KERNEL_VERSION "1.5.4"
 
 typedef struct {
     uint32_t magic;

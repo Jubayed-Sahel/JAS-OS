@@ -39,7 +39,7 @@ serial -> IDT/PIC -> PIT -> PS/2 keyboard/mouse -> graphics
 | `kernel/src/filesystem.c` | Hierarchical MiniFS |
 | `kernel/src/storage.c` | Disk scheduling and I/O statistics |
 | `kernel/src/lecture.c` | IPC mailbox and replacement comparisons |
-| `kernel/src/commands.c` | Shell, syscalls, teacher mode, chapter demos |
+| `kernel/src/commands.c` | Shell, syscalls, understanding guide, chapter evidence |
 
 ## Scheduling model
 
@@ -48,7 +48,7 @@ task according to the active policy, calls one bounded step, records the task ID
 in the timeline, and returns to the GUI loop. Sleeping and semaphore-blocked
 tasks become runnable when their condition changes.
 
-## Presentation path
+## Understanding-evidence path
 
 `present CH` prints three pieces of evidence before running the chapter command:
 
@@ -62,6 +62,7 @@ the scheduler, and leaves the shell responsive.
 
 ## Scope boundary
 
-Paging, disk scheduling, RAID, and I/O modes are explicit educational models.
+Paging, disk scheduling, RAID, and I/O modes are explicit course-concept models
+used to verify my understanding; they are not claimed as production drivers.
 MiniFS is RAM-backed for one VM session. JAS OS does not claim ring-3 isolation,
 a hardware disk driver, networking, or chapter 14+ protection/security.
