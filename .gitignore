@@ -1,0 +1,19 @@
+# Generated build products
+build/
+*.o
+*.elf
+*.bin
+*.iso
+
+# The verified submission image is intentionally versioned.
+!jas-os.iso
+
+# The local cross-toolchain is nearly 900 MB; install i686-elf tools separately.
+tools/
+
+# Local QA and authoring intermediates
+tmp/
+docs/assets/desktop.png
+
+# Compatibility image generated for an existing VirtualBox attachment
+minios-x86.iso
