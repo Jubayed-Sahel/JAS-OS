@@ -13,7 +13,7 @@
 #include "hw.h"
 #include "input.h"
 #include "klib.h"
-#include "lecture.h"
+#include "concepts.h"
 #include "memory.h"
 #include "paging.h"
 #include "scheduler.h"
@@ -134,7 +134,7 @@ static bool resolve_path(const char *input, char output[MINIFS_PATH_LENGTH])
 
 static void print_syscall_help(void)
 {
-    print_title("S", "SYSCALL ALIASES", "Lecture-friendly names that call real kernel modules");
+    print_title("S", "SYSCALL ALIASES", "Convenient names that call real kernel modules");
     kprintf("  PROCESS / SCHEDULER\n");
     kprintf("  syscall create                 create counter task\n");
     kprintf("  syscall kill ID                terminate task\n");
@@ -151,7 +151,7 @@ static void print_syscall_help(void)
     kprintf("  syscall banker_release P A B C   banker release ...\n");
     kprintf("  syscall sync                   start producer-consumer\n");
     kprintf("  syscall page demo              FIFO demand-paging trace\n");
-    kprintf("  syscall disk / syscall io      chapter 12/13 demos\n");
+    kprintf("  syscall disk / syscall io      storage and device demos\n");
     kprintf("\n");
     kprintf("  FILE SYSTEM (MiniFS)\n");
     kprintf("  syscall open|read PATH         cat PATH\n");
@@ -164,12 +164,12 @@ static void print_syscall_help(void)
 
 static void print_help(void)
 {
-    print_title("?", "COMMAND CENTER", "Run my CSE323 implementations and inspect their state");
-    kprintf("  UNDERSTANDING  guide / explain CH / present CH\n");
-    kprintf("                Example: present 5\n\n");
+    print_title("?", "COMMAND CENTER", "Run kernel features and inspect their state");
+    kprintf("  START HERE     quickstart / guide / modules\n");
+    kprintf("  TERMINAL KEYS  Up/Down history | Tab complete | Ctrl+C stop | Ctrl+L clear\n\n");
     kprintf("  DEMO POINTER   pointer guide|stop|files|notes|settings|clock|oslab|terminal\n\n");
-    kprintf("  LECTURE MAP (chapters 1-13; chapter 14 onward excluded)\n");
-    kprintf("  Overview      lectures / services / boot\n");
+    kprintf("  KERNEL FEATURES\n");
+    kprintf("  Overview      modules / services / boot\n");
     kprintf("  Processes     tasks / create counter / ipc / thread demo\n");
     kprintf("  Scheduling    schedule rr|priority|fcfs|sjf / timeline\n");
     kprintf("                priority ID 0..9 / burst ID TICKS\n");
@@ -183,12 +183,43 @@ static void print_help(void)
     kprintf("  Syscalls      syscall ...   (type 'syscall' for aliases)\n");
     kprintf("\n");
     kprintf("  BASIC\n");
-    kprintf("  status / dashboard / help / about / sysinfo / log / clear\n");
+    kprintf("  status / dashboard / help / history / about / sysinfo / log / clear\n");
     kprintf("  calc A OP B / notes / note write|read|append|delete\n");
     kprintf("  stop / pause all / resume all / ticks / reboot / shutdown\n");
     kprintf("  rr / prio / fcfs / sjf\n");
     print_rule();
-    kprintf("  Sidebar apps: Files, Notes, Terminal, Task Mgr, Calculator, Power.\n");
+    kprintf("  Sidebar apps: Files, Notes, Terminal, Task Mgr, Calculator,\n");
+    kprintf("                Settings, Clock, OS Lab, Reboot, and Power.\n");
+}
+
+static void print_quick_start(void)
+{
+    print_title("*", "QUICK START", "A simple evaluation route with live kernel evidence");
+    kprintf("  1  dashboard          confirm live kernel and subsystem state\n");
+    kprintf("  2  tasks              inspect processes and task states\n");
+    kprintf("  3  timeline           view CPU scheduling decisions\n");
+    kprintf("  4  rw demo            start synchronization evidence\n");
+    kprintf("  5  stop               end every terminal background job\n");
+    kprintf("  6  banker safe        calculate a deadlock-safe sequence\n");
+    kprintf("  7  mem test           test allocation, free, and coalescing\n");
+    kprintf("  8  page demo          trace paging and page replacement\n");
+    kprintf("  9  ls / fsinfo        inspect files and storage state\n");
+    kprintf("  10 io demo            compare I/O operating modes\n");
+    print_rule();
+    kprintf("  Tip: use Up/Down to repeat commands and Tab to complete them.\n");
+}
+
+static void print_unknown_command(const char *command)
+{
+    kprintf("  [X]  Command not found: %s\n", command);
+    if (kstrncmp(command, "sched", 5) == 0)
+        kprintf("  [TIP] Try: schedule status, schedule rr, priority, or timeline.\n");
+    else if (kstrncmp(command, "task", 4) == 0 || kstrncmp(command, "process", 7) == 0)
+        kprintf("  [TIP] Try: tasks, create counter, thread demo, or ipc demo.\n");
+    else if (kstrncmp(command, "file", 4) == 0 || kstrncmp(command, "dir", 3) == 0)
+        kprintf("  [TIP] Try: ls, pwd, mkdir, write, cat, or fsinfo.\n");
+    else
+        kprintf("  [TIP] Try quickstart, guide, help, or press Tab for completion.\n");
 }
 
 static bool execute_syscall(const char *args)
@@ -336,28 +367,24 @@ static bool execute_syscall(const char *args)
 
 static void print_about(void)
 {
-    print_title("*", "JAS OS - X86 COURSE CONCEPT KERNEL", "My implementation of CSE323 concepts on bare-metal i686");
-    kprintf("\n  PROJECT MOTIVE\n");
-    kprintf("  Build and test the lecture concepts myself so I can prove that I\n");
-    kprintf("  understand how the algorithms change real kernel state.\n");
+    print_title("*", "JAS OS - X86 KERNEL", "A freestanding graphical operating system on bare-metal i686");
     kprintf("\n  WHAT I BUILT\n");
     kprintf("  A visible OS implementation where every scheduling decision,\n");
     kprintf("  task state, allocation, resource request, and file is inspectable.\n\n");
-    kprintf("  CORE MODULES (CSE323 through chapter 13)\n");
-    kprintf("  [01] Multi-policy scheduler  [04] Banker's deadlock avoidance\n");
-    kprintf("  [02] Counting semaphores     [05] Hierarchical MiniFS\n");
-    kprintf("  [03] First-fit allocator     [06] Desktop + Terminal + Notes\n");
-    kprintf("  [07] Demand paging (FIFO)    [08] Visible syscall aliases\n");
-    kprintf("  [09] CPU timeline + log      [10] Disk scheduling + RAID\n");
-    kprintf("  [11] Poll/IRQ/DMA I/O model  [12] Calculator + Notes\n");
-    kprintf("  [13] IPC mailbox + threads   [14] Readers-writers lab\n");
-    kprintf("  [15] Page/fit/fs allocation comparison labs\n\n");
-    kprintf("  SCOPE LIMIT: chapter 14 onward (protection and security).\n\n");
+    kprintf("  CORE MODULES\n");
+    kprintf("  Multi-policy scheduler       Banker's deadlock avoidance\n");
+    kprintf("  Counting semaphores          Hierarchical MiniFS\n");
+    kprintf("  First-fit allocator          Desktop + Terminal + Notes\n");
+    kprintf("  Demand paging (FIFO)         Visible syscall aliases\n");
+    kprintf("  CPU timeline + event log     Disk scheduling + RAID\n");
+    kprintf("  Poll/IRQ/DMA I/O model       Calculator + Settings + Clock\n");
+    kprintf("  IPC mailbox + threads        Readers-writers lab\n");
+    kprintf("  Page, fit, and file-allocation comparison labs\n\n");
     kprintf("  PLATFORM  i686 (x86)   POLICY  Cooperative   VERSION  %s\n", KERNEL_VERSION);
     kprintf("\n  PRESENTED BY\n");
     kprintf("  Jubayed Ahmed Sahel  |  ID: 2221173642  |  CSE 323, Section 3\n");
     print_rule();
-    kprintf("  Type 'help' or 'syscall' in Terminal for the lecture command map.\n");
+    kprintf("  Type 'help' or 'modules' in Terminal for the feature map.\n");
 }
 
 static void print_dashboard(void)
@@ -370,7 +397,7 @@ static void print_dashboard(void)
     const unsigned free_percent = stats.heap_size == 0 ? 0U :
         (unsigned)((stats.free_bytes * 100U) / stats.heap_size);
 
-    print_title("#", "LIVE KERNEL DASHBOARD", "Understanding evidence - real-time subsystem state");
+    print_title("#", "LIVE KERNEL DASHBOARD", "Real-time subsystem state");
     kprintf("\n  SCHEDULER                 MEMORY\n");
     kprintf("  Active tasks   %-2u / %-2u    Heap free      %5u B\n",
             (unsigned)task_active_count(), (unsigned)KERNEL_MAX_TASKS, (unsigned)stats.free_bytes);
@@ -390,7 +417,7 @@ static void print_dashboard(void)
     kprintf("  [READY ] I/O subsystem model   Requests: %-4u  Bytes: %-6u\n\n",
             io.requests, io.bytes);
     print_rule();
-    kprintf("  Quick demos: lectures | ipc demo | rw demo | replace demo\n");
+    kprintf("  Quick demos: modules | ipc demo | rw demo | replace demo\n");
 }
 
 static void print_system_info(void)
@@ -687,33 +714,31 @@ static void print_demo_status(void)
 }
 
 /* ------------------------------------------------------------------ */
-/* Focused lecture 1-11 command labs.                                 */
+/* Focused operating-system command labs.                             */
 
-static void print_lecture_map(void)
+static void print_module_map(void)
 {
-    print_title("L", "LECTURE IMPLEMENTATION MAP", "Main features from chapters 1-13");
-    kprintf("  CH  MAIN IDEA                         LIVE COMMAND\n");
-    kprintf("  --  --------------------------------  -------------------------\n");
-    kprintf("  01  OS organization and resources    status / sysinfo\n");
-    kprintf("  02  services, syscalls, boot          services / syscall / boot\n");
-    kprintf("  03  processes and IPC                 tasks / ipc demo\n");
-    kprintf("  04  shared-address-space workers      thread demo / thread status\n");
-    kprintf("  05  CPU scheduling                    schedule ... / timeline\n");
-    kprintf("  06  synchronization                   start / rw demo\n");
-    kprintf("  07  deadlocks                         banker status / safe\n");
-    kprintf("  08  main-memory allocation            mem test / fit demo\n");
-    kprintf("  09  virtual memory                    page demo / replace demo\n");
-    kprintf("  10  file-system interface             ls / write / cat / mkdir\n");
-    kprintf("  11  file-system implementation        fsalloc demo / fsinfo\n");
-    kprintf("  12  mass storage                      disk demo / raid\n");
-    kprintf("  13  I/O systems                       io demo / io status\n");
+    print_title("M", "KERNEL MODULE MAP", "Feature-oriented commands backed by live state");
+    kprintf("  MAIN FEATURE                      LIVE COMMAND\n");
+    kprintf("  --------------------------------  -------------------------\n");
+    kprintf("  OS organization and resources    status / sysinfo\n");
+    kprintf("  Services, syscalls, and boot      services / syscall / boot\n");
+    kprintf("  Processes and IPC                 tasks / ipc demo\n");
+    kprintf("  Shared-address-space workers      thread demo / thread status\n");
+    kprintf("  CPU scheduling                    schedule ... / timeline\n");
+    kprintf("  Synchronization                   start / rw demo\n");
+    kprintf("  Deadlock avoidance                banker status / safe\n");
+    kprintf("  Main-memory allocation            mem test / fit demo\n");
+    kprintf("  Virtual memory                    page demo / replace demo\n");
+    kprintf("  File system                       ls / fsalloc demo / fsinfo\n");
+    kprintf("  Mass storage                      disk demo / raid\n");
+    kprintf("  I/O systems                       io demo / io status\n");
     print_rule();
-    kprintf("  Chapter 14 onward is intentionally outside project scope.\n");
 }
 
 static void print_services(void)
 {
-    print_title("O", "OPERATING-SYSTEM SERVICES", "Lectures 1-2 represented by this kernel");
+    print_title("O", "OPERATING-SYSTEM SERVICES", "Services provided by this kernel");
     kprintf("  User interface       graphical desktop + command terminal\n");
     kprintf("  Program execution    task_create, scheduler, normal/forced exit\n");
     kprintf("  I/O operations       PS/2 IRQ input and framebuffer output\n");
@@ -727,7 +752,7 @@ static void print_services(void)
 
 static void print_boot_path(void)
 {
-    print_title("B", "X86 BOOT PATH", "Lecture 2: system boot and kernel initialization");
+    print_title("B", "X86 BOOT PATH", "System boot and kernel initialization");
     kprintf("  1. BIOS selects the El Torito boot image from the ISO\n");
     kprintf("  2. 16-bit loader reads kernel sectors into physical memory\n");
     kprintf("  3. VESA mode supplies a linear framebuffer\n");
@@ -740,7 +765,7 @@ static void print_boot_path(void)
 static void execute_ipc_command(const char *line)
 {
     if (kstrcmp(line, "ipc") == 0 || kstrcmp(line, "ipc status") == 0) {
-        print_title("I", "IPC MAILBOX", "Lecture 3: message passing between processes");
+        print_title("I", "IPC MAILBOX", "Message passing between processes");
         kprintf("  State      %s\n", ipc_has_message() ? "FULL (sender would block)" : "EMPTY (receiver would block)");
         kprintf("  Sent       %u\n", ipc_sent_count());
         kprintf("  Received   %u\n", ipc_received_count());
@@ -788,7 +813,7 @@ static void execute_thread_command(const char *line)
     } else if (kstrcmp(line, "thread") == 0 || kstrcmp(line, "thread status") == 0) {
         demo_thread_status_t status;
         demo_get_thread_status(&status);
-        print_title("T", "THREAD LAB", "Lecture 4: independent execution sharing process resources");
+        print_title("T", "THREAD LAB", "Independent execution sharing process resources");
         kprintf("  State          %s\n", status.started ? "RUNNING" : "STOPPED");
         kprintf("  Worker tasks   T%u and T%u\n", status.worker_a_id, status.worker_b_id);
         kprintf("  Shared counter %u\n", status.shared_counter);
@@ -810,7 +835,7 @@ static void execute_rw_command(const char *line)
     } else if (kstrcmp(line, "rw") == 0 || kstrcmp(line, "rw status") == 0) {
         demo_rw_status_t status;
         demo_get_rw_status(&status);
-        print_title("R", "READERS-WRITERS", "Lecture 6: concurrent reads, exclusive writes");
+        print_title("R", "READERS-WRITERS", "Concurrent reads and exclusive writes");
         kprintf("  State          %s\n", status.started ? "RUNNING" : "STOPPED");
         kprintf("  Tasks          readers T%u/T%u, writer T%u\n",
                 status.reader_ids[0], status.reader_ids[1], status.writer_id);
@@ -852,7 +877,7 @@ static void print_fit_demo(void)
     static const uint16_t holes[] = {100, 500, 200, 300, 600};
     const uint16_t request = 212;
     fit_result_t result = fit_compare(holes, sizeof(holes) / sizeof(holes[0]), request);
-    print_title("M", "CONTIGUOUS-ALLOCATION FIT", "Lecture 8: selecting a free memory hole");
+    print_title("M", "CONTIGUOUS-ALLOCATION FIT", "Selecting a free memory hole");
     kprintf("  Holes (KiB)  100, 500, 200, 300, 600\n");
     kprintf("  Request      %u KiB\n\n", request);
     kprintf("  First fit    hole %d (%u KiB) - first sufficient block\n",
@@ -869,7 +894,7 @@ static void print_replacement_demo(void)
     static const uint8_t references[] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2};
     replacement_result_t result = replacement_compare(
         references, sizeof(references) / sizeof(references[0]), 3);
-    print_title("V", "PAGE-REPLACEMENT COMPARISON", "Lecture 9: same trace, three frames");
+    print_title("V", "PAGE-REPLACEMENT COMPARISON", "Same trace with three frames");
     kprintf("  Reference string  7 0 1 2 0 3 0 4 2 3 0 3 2\n");
     kprintf("  FIFO faults       %u   oldest loaded page is replaced\n", result.fifo_faults);
     kprintf("  LRU faults        %u   least recently used page is replaced\n", result.lru_faults);
@@ -879,7 +904,7 @@ static void print_replacement_demo(void)
 
 static void print_fsalloc_demo(void)
 {
-    print_title("F", "FILE-ALLOCATION METHODS", "Lecture 11: mapping five logical blocks");
+    print_title("F", "FILE-ALLOCATION METHODS", "Mapping five logical blocks");
     kprintf("  Contiguous   start=40, length=5 -> 40 41 42 43 44\n");
     kprintf("  Linked       directory=9 -> 9 -> 16 -> 1 -> 10 -> 25\n");
     kprintf("  Indexed      index block 7 contains [9 16 1 10 25]\n\n");
@@ -891,7 +916,7 @@ static void print_fsalloc_demo(void)
 }
 
 /* ------------------------------------------------------------------ */
-/* Chapters 12-13: mass storage and kernel I/O.                       */
+/* Mass storage and kernel I/O.                                      */
 
 static bool disk_policy_from_name(const char *name, disk_policy_t *policy)
 {
@@ -917,7 +942,7 @@ static void execute_disk_command(const char *line)
     static const uint16_t requests[] = {98, 183, 37, 122, 14, 124, 65, 67};
     const uint16_t head = 53;
     if (kstrcmp(line, "disk") == 0 || kstrcmp(line, "disk help") == 0) {
-        print_title("D", "MASS-STORAGE LAB", "Chapter 12: disk scheduling and RAID");
+        print_title("D", "MASS-STORAGE LAB", "Disk scheduling and RAID");
         kprintf("  disk demo                 compare all scheduling policies\n");
         kprintf("  disk fcfs|sstf            run the classic queue\n");
         kprintf("  disk scan|cscan|clook     run upward from cylinder 53\n");
@@ -928,7 +953,7 @@ static void execute_disk_command(const char *line)
         return;
     }
     if (kstrcmp(line, "disk demo") == 0) {
-        print_title("D", "DISK-SCHEDULING COMPARISON", "Classic lecture queue; head=53, direction=up");
+        print_title("D", "DISK-SCHEDULING COMPARISON", "Shared request queue; head=53, direction=up");
         for (disk_policy_t policy = DISK_FCFS; policy <= DISK_CLOOK; ++policy) {
             disk_result_t result;
             disk_schedule(policy, requests, sizeof(requests) / sizeof(requests[0]),
@@ -976,7 +1001,7 @@ static void execute_disk_command(const char *line)
 
 static void print_raid(void)
 {
-    print_title("R", "RAID STRUCTURE", "Chapter 12: striping, mirroring, and parity");
+    print_title("R", "RAID STRUCTURE", "Striping, mirroring, and parity");
     kprintf("  LEVEL  LAYOUT                    MIN DISKS  FAILURE TOLERANCE\n");
     kprintf("  -----  ------------------------  ---------  -----------------\n");
     kprintf("  RAID 0 Striping                  2          none\n");
@@ -991,7 +1016,7 @@ static void print_raid(void)
 static void print_io_status(void)
 {
     const io_stats_t stats = io_get_stats();
-    print_title("I", "KERNEL I/O SUBSYSTEM", "Chapter 13: devices, queues, and transfer modes");
+    print_title("I", "KERNEL I/O SUBSYSTEM", "Devices, queues, and transfer modes");
     kprintf("  DEVICE       CLASS       INTERFACE       EXAMPLE OPERATIONS\n");
     kprintf("  -----------  ----------  --------------  ------------------\n");
     kprintf("  PS/2 keys    character   IRQ 1           get / line input\n");
@@ -1007,7 +1032,7 @@ static void print_io_status(void)
 static void execute_io_command(const char *line)
 {
     if (kstrcmp(line, "io") == 0 || kstrcmp(line, "io help") == 0) {
-        print_title("I", "I/O SYSTEMS LAB", "Chapter 13 terminal demonstrations");
+        print_title("I", "I/O SYSTEMS LAB", "Terminal device demonstrations");
         kprintf("  io demo                 compare polling, IRQ, and DMA\n");
         kprintf("  io status               device table and counters\n");
         kprintf("  io poll|interrupt|dma N simulate an N-byte transfer\n");
@@ -1182,100 +1207,24 @@ static void execute_notes(const char *line)
 }
 
 /* ------------------------------------------------------------------ */
-/* Understanding and assessment evidence mode.                        */
+/* Feature demonstration guide.                                      */
 
-static const char *s_chapter_title[] = {
-    "", "OS OVERVIEW", "OS SERVICES + BOOT", "PROCESSES + IPC",
-    "THREADS", "CPU SCHEDULING", "SYNCHRONIZATION", "DEADLOCKS",
-    "MAIN MEMORY", "VIRTUAL MEMORY", "FILE-SYSTEM INTERFACE",
-    "FILE-SYSTEM IMPLEMENTATION", "MASS STORAGE", "I/O SYSTEMS"
-};
-
-static const char *s_chapter_concept[] = {
-    "", "The kernel manages CPU, memory, devices, tasks, and files.",
-    "Applications reach kernel services through controlled interfaces.",
-    "Processes have states; IPC transfers data without shared variables.",
-    "Workers share one address space and synchronize shared state.",
-    "A scheduling policy selects the next READY task for the CPU.",
-    "Semaphores prevent races in producer-consumer and readers-writers.",
-    "Banker's algorithm grants only requests that leave a safe sequence.",
-    "The heap tracks allocation, release, splitting, and coalescing.",
-    "Demand paging maps virtual pages to frames and replaces victims.",
-    "Directories and file operations provide a named storage interface.",
-    "MiniFS tracks entries, allocation methods, and persistent commits.",
-    "Disk scheduling reduces head movement; RAID trades space for resilience.",
-    "Polling, interrupts, and DMA use different CPU/device workflows."
-};
-
-static const char *s_chapter_impl[] = {
-    "", "32-bit kernel dashboard plus live subsystem counters.",
-    "BIOS loader, protected-mode setup, drivers, syscalls, and services.",
-    "Task control blocks, lifecycle states, scheduler, and kernel mailbox.",
-    "Two schedulable workers update a semaphore-protected shared counter.",
-    "Runtime RR, Priority, FCFS, and SJF policies with a CPU timeline.",
-    "Custom counting/binary semaphores and bounded-buffer task demos.",
-    "A real resource-allocation table, safety test, request, and release.",
-    "First-fit kernel heap with statistics and an allocation self-test.",
-    "Page tables, frame ownership, FIFO trace, and replacement comparison.",
-    "Hierarchical RAM file system with mkdir, cd, read, write, and delete.",
-    "MiniFS metadata plus contiguous, linked, and indexed allocation demo.",
-    "FCFS/SSTF/SCAN/C-SCAN/C-LOOK calculations and RAID comparison.",
-    "Simulated device controller statistics for polling, IRQ, and DMA."
-};
-
-static const char *s_chapter_command[] = {
-    "", "status", "services", "ipc demo", "thread demo", "schedule status",
-    "rw demo", "banker status", "mem test", "page demo", "ls",
-    "fsalloc demo", "disk demo", "io demo"
-};
-
-static void print_understanding_guide(void)
+static void print_feature_guide(void)
 {
-    print_title("U", "MY UNDERSTANDING GUIDE", "How I prove each CSE323 concept with live kernel state");
-    kprintf("  1  Start with:  present 1     kernel overview and live resources\n");
-    kprintf("  2  Continue:    present 2     boot path and OS services\n");
-    kprintf("  3  Core jobs:   present 3     processes and IPC\n");
-    kprintf("  4  Compare:     present 5     four CPU schedulers\n");
-    kprintf("  5  Prove sync:  present 6     protected shared data\n");
-    kprintf("  6  Safety:      present 7     Banker's safe state\n");
-    kprintf("  7  Storage:     present 10    real file interface\n");
-    kprintf("  8  Finish:      present 12 / present 13\n\n");
-    kprintf("  present CH  states what I understand, then runs my implementation.\n");
-    kprintf("  explain CH  shows my concept and implementation without changing state.\n");
-    kprintf("  lectures    shows the complete chapter-to-command map.\n");
+    print_title("G", "JAS OS FEATURE GUIDE", "Direct commands for inspecting live kernel state");
+    kprintf("  Kernel overview       status / sysinfo\n");
+    kprintf("  Services and boot     services / boot / syscall\n");
+    kprintf("  Processes and IPC     tasks / ipc demo\n");
+    kprintf("  Scheduling            schedule status / timeline\n");
+    kprintf("  Synchronization       rw demo / start\n");
+    kprintf("  Deadlock avoidance    banker status / banker safe\n");
+    kprintf("  Memory and paging     mem test / page demo / replace demo\n");
+    kprintf("  Files and storage     fsinfo / disk demo / raid\n");
+    kprintf("  Device I/O            io demo / io status\n\n");
+    kprintf("  modules     shows the complete feature-to-command map.\n");
     kprintf("  stop        immediately ends all terminal background activity.\n");
     print_rule();
-    kprintf("  Evidence statement: 'This output is generated by my kernel module,\n");
-    kprintf("  not hard-coded UI; the counters and states change while tasks run.'\n");
-}
-
-static bool valid_chapter_argument(const char *text, unsigned *chapter)
-{
-    unsigned value = 0;
-    if (!parse_uints(text, &value, 1) || value < 1U || value > 13U) return false;
-    *chapter = value;
-    return true;
-}
-
-static void explain_chapter(unsigned chapter)
-{
-    print_title("D", s_chapter_title[chapter], "WHAT I IMPLEMENTED AND WHAT THE DEMO PROVES");
-    kprintf("  CONCEPT\n  %s\n\n", s_chapter_concept[chapter]);
-    kprintf("  MY IMPLEMENTATION\n  %s\n\n", s_chapter_impl[chapter]);
-    kprintf("  LIVE PROOF\n  Command: %s\n", s_chapter_command[chapter]);
-    print_rule();
-}
-
-static void present_chapter(unsigned chapter)
-{
-    explain_chapter(chapter);
-    kprintf("  [RUN] Executing chapter %u live proof now...\n", chapter);
-    commands_execute(s_chapter_command[chapter]);
-    if (chapter == 2U) commands_execute("boot");
-    else if (chapter == 3U) commands_execute("tasks");
-    else if (chapter == 5U) commands_execute("timeline");
-    else if (chapter == 6U) commands_execute("rw status");
-    else if (chapter == 10U) commands_execute("fsinfo");
+    kprintf("  Every listed command reads or changes real kernel-managed state.\n");
 }
 
 /* ------------------------------------------------------------------ */
@@ -1291,28 +1240,21 @@ void commands_execute(const char *raw)
     while (*p == ' ') p++;
     if (*p == 0) return;
 
-    if (kstrcmp(p, "help") == 0) print_help();
+    if (kstrcmp(p, "help") == 0 || kstrcmp(p, "?") == 0 ||
+        kstrcmp(p, "commands") == 0) print_help();
     else if (kstrncmp(p, "pointer ", 8) == 0) {
         if (!move_demo_pointer(p + 8))
             print_warning("Usage: pointer guide|stop|files|notes|settings|clock|oslab|terminal");
     }
-    else if (kstrcmp(p, "understanding") == 0 || kstrcmp(p, "viva") == 0 ||
-             kstrcmp(p, "guide") == 0) print_understanding_guide();
-    else if (kstrncmp(p, "explain ", 8) == 0) {
-        unsigned chapter;
-        if (valid_chapter_argument(p + 8, &chapter)) explain_chapter(chapter);
-        else print_warning("Usage: explain CH   (CH is 1..13)");
-    }
-    else if (kstrncmp(p, "present ", 8) == 0) {
-        unsigned chapter;
-        if (valid_chapter_argument(p + 8, &chapter)) present_chapter(chapter);
-        else print_warning("Usage: present CH   (CH is 1..13)");
-    }
+    else if (kstrcmp(p, "quickstart") == 0 || kstrcmp(p, "start here") == 0)
+        print_quick_start();
+    else if (kstrcmp(p, "guide") == 0) print_feature_guide();
     else if (kstrcmp(p, "syscall") == 0 || kstrncmp(p, "syscall ", 8) == 0) {
         execute_syscall(kstrcmp(p, "syscall") == 0 ? "" : p + 8);
     }
-    else if (kstrcmp(p, "dashboard") == 0 || kstrcmp(p, "status") == 0) print_dashboard();
-    else if (kstrcmp(p, "lectures") == 0 || kstrcmp(p, "lecture map") == 0) print_lecture_map();
+    else if (kstrcmp(p, "dashboard") == 0 || kstrcmp(p, "status") == 0 ||
+             kstrcmp(p, "home") == 0) print_dashboard();
+    else if (kstrcmp(p, "modules") == 0 || kstrcmp(p, "module map") == 0) print_module_map();
     else if (kstrcmp(p, "services") == 0) print_services();
     else if (kstrcmp(p, "boot") == 0) print_boot_path();
     else if (kstrcmp(p, "stop") == 0 || kstrcmp(p, "stop all") == 0 ||
@@ -1353,7 +1295,8 @@ void commands_execute(const char *raw)
             print_ok("Task burst estimate updated for SJF.");
         else print_warning("Usage: burst ID TICKS");
     }
-    else if (kstrcmp(p, "ps") == 0 || kstrcmp(p, "tasks") == 0) print_tasks();
+    else if (kstrcmp(p, "ps") == 0 || kstrcmp(p, "tasks") == 0 ||
+             kstrcmp(p, "taskmgr") == 0) print_tasks();
     else if (kstrcmp(p, "ticks") == 0) {
         kprintf("  [OK] Scheduler has completed %u custom slices.\n", scheduler_ticks());
     }
@@ -1429,9 +1372,11 @@ void commands_execute(const char *raw)
     else if (kstrcmp(p, "notes") == 0 || kstrcmp(p, "note") == 0 ||
              kstrncmp(p, "note ", 5) == 0) execute_notes(p);
     else if (kstrcmp(p, "pwd") == 0) kprintf("  %s\n", s_cwd);
-    else if (kstrcmp(p, "ls") == 0 || kstrncmp(p, "ls ", 3) == 0) {
+    else if (kstrcmp(p, "ls") == 0 || kstrncmp(p, "ls ", 3) == 0 ||
+             kstrcmp(p, "dir") == 0) {
         char path[MINIFS_PATH_LENGTH];
-        const char *argument = kstrcmp(p, "ls") == 0 ? s_cwd : p + 3;
+        const char *argument = (kstrcmp(p, "ls") == 0 || kstrcmp(p, "dir") == 0)
+                             ? s_cwd : p + 3;
         while (*argument == ' ') argument++;
         if (!resolve_path(argument, path) || !minifs_directory_exists(path)) {
             print_error("Directory not found.");
@@ -1509,7 +1454,7 @@ void commands_execute(const char *raw)
         else print_error("Format failed.");
     }
     else if (kstrncmp(p, "format", 6) == 0) print_warning("Destructive action. Type exactly: format YES");
-    else if (kstrcmp(p, "clear") == 0) {
+    else if (kstrcmp(p, "clear") == 0 || kstrcmp(p, "cls") == 0) {
         extern void terminal_clear(void);
         terminal_clear();
     }
@@ -1521,5 +1466,5 @@ void commands_execute(const char *raw)
         print_ok("Shutting down...");
         shutdown_system();
     }
-    else print_warning("Unknown command. Type 'help' to open the command center.");
+    else print_unknown_command(p);
 }

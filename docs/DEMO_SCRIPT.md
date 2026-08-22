@@ -7,21 +7,20 @@ screen was captured from the real JAS OS ISO running in Oracle VirtualBox.
 ## 0:00-0:21 — Introduction
 
 > Welcome to JAS OS, my bootable 32-bit x86 course-project operating system for
-> CSE 323. The motive is to implement, test, and prove my own understanding of
-> the lecture concepts from chapters 1 through 13, not to teach other people.
+> CSE 323. It runs as a freestanding kernel and provides a graphical desktop,
+> terminal, applications, and live views of its major subsystems.
 
-## 0:21-0:47 — Understanding evidence mode
+## 0:21-0:47 — Feature guide
 
 Command: `guide`
 
-> The guide maps each lecture concept to my implementation and live evidence.
-> `explain` states what I understand without changing state, while `present`
-> runs the corresponding kernel proof. The sidebar also provides Files, Notes,
-> Task Manager, Calculator, Settings, Clock, and OS Lab.
+> The guide maps each kernel feature to direct commands and live state. The
+> sidebar also provides Files, Notes, Task Manager, Calculator, Settings, Clock,
+> and OS Lab.
 
 ## 0:47-1:10 — Kernel overview
 
-Command: `present 1`
+Command: `status`
 
 > JAS OS boots through its own loader into protected mode, then initializes
 > interrupts, scheduling, memory, paging, MiniFS, storage, and I/O. The displayed
@@ -29,7 +28,7 @@ Command: `present 1`
 
 ## 1:10-1:31 — Processes and IPC
 
-Command: `present 3`
+Command: `ipc demo`
 
 > Task control blocks expose identifiers, priorities, and lifecycle states. A
 > kernel mailbox performs explicit send and receive operations while the task
@@ -37,14 +36,14 @@ Command: `present 3`
 
 ## 1:31-1:53 — CPU scheduling
 
-Command: `present 5`
+Command: `schedule status`
 
 > JAS OS implements Round Robin, Priority, FCFS, and SJF. The scheduling policy
 > can be changed at runtime, and the timeline records recent CPU slices.
 
 ## 1:53-2:12 — Synchronization
 
-Command: `present 6`
+Command: `rw demo`
 
 > The readers-writers lab uses kernel semaphores. Multiple readers may enter
 > together, while a writer receives exclusive access. Live counters show
@@ -60,32 +59,31 @@ Command: `stop`
 
 ## 2:31-2:51 — Deadlock avoidance
 
-Command: `present 7`
+Command: `banker status`
 
 > Banker's algorithm displays allocation, maximum demand, need, and available
 > resources. A request is granted only when a safe execution sequence remains.
 
 ## 2:51-3:12 — Virtual memory
 
-Command: `present 9`
+Command: `page demo`
 
 > Paging translates virtual addresses, allocates frames, tracks dirty pages, and
 > counts hits and faults. FIFO replacement reports the selected victim page.
 
 ## 3:12-3:31 — Mass storage
 
-Command: `present 12`
+Command: `disk demo`
 
 > FCFS, SSTF, SCAN, C-SCAN, and C-LOOK run on the same request queue and report
 > total head movement for direct comparison.
 
 ## 3:31-3:54 — I/O systems
 
-Command: `present 13`
+Command: `io demo`
 
 > Polling, interrupts, and DMA are compared with live counters. Together with
-> the earlier labs, these features implement the main course knowledge through
-> chapter 13.
+> the earlier labs, these commands show how each subsystem changes kernel state.
 
 ## 3:54-4:20 — Closing
 
@@ -101,5 +99,5 @@ Command: `present 13`
   keeping the scheduling algorithms small enough to explain.
 - **How do you stop output?** Use `stop` or the red STOP button. All non-shell
   background tasks are terminated and the shell remains responsive.
-- **What did you exclude?** Chapter 14 onward, user-mode isolation, networking,
-  and production disk/device support.
+- **What did you exclude?** User-mode isolation, networking, and production
+  disk or device support.

@@ -3,6 +3,19 @@
 
 #include "ktypes.h"
 
+/* Non-printing key events returned by keyboard_read_char(). */
+#define KBD_KEY_CANCEL    0x03
+#define KBD_KEY_CLEAR     0x0C
+#define KBD_KEY_UP        0x11
+#define KBD_KEY_DOWN      0x12
+#define KBD_KEY_LEFT      0x13
+#define KBD_KEY_RIGHT     0x14
+#define KBD_KEY_HOME      0x15
+#define KBD_KEY_END       0x16
+#define KBD_KEY_PAGE_UP   0x17
+#define KBD_KEY_PAGE_DOWN 0x18
+#define KBD_KEY_DELETE    0x7F
+
 void keyboard_init(void);
 void mouse_init(void);
 void keyboard_irq(void);

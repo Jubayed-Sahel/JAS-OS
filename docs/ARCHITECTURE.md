@@ -38,8 +38,8 @@ serial -> IDT/PIC -> PIT -> PS/2 keyboard/mouse -> graphics
 | `kernel/src/banker.c` | Deadlock avoidance and safe-sequence search |
 | `kernel/src/filesystem.c` | Hierarchical MiniFS |
 | `kernel/src/storage.c` | Disk scheduling and I/O statistics |
-| `kernel/src/lecture.c` | IPC mailbox and replacement comparisons |
-| `kernel/src/commands.c` | Shell, syscalls, understanding guide, chapter evidence |
+| `kernel/src/concepts.c` | IPC mailbox and replacement comparisons |
+| `kernel/src/commands.c` | Shell, syscalls, feature guide, and live demonstrations |
 
 ## Scheduling model
 
@@ -48,13 +48,13 @@ task according to the active policy, calls one bounded step, records the task ID
 in the timeline, and returns to the GUI loop. Sleeping and semaphore-blocked
 tasks become runnable when their condition changes.
 
-## Understanding-evidence path
+## Feature-demonstration path
 
-`present CH` prints three pieces of evidence before running the chapter command:
+The terminal Guide and Modules screens connect each subsystem to a direct command:
 
-1. the course concept;
-2. the concrete JAS OS implementation;
-3. the live command that proves the implementation.
+1. the kernel feature;
+2. its concrete JAS OS implementation;
+3. the command that displays or changes its live state.
 
 The OS Lab window calls this same path, keeping mouse and terminal demonstrations
 consistent. `stop` shuts down named labs, kills remaining non-shell tasks, restores
@@ -62,7 +62,7 @@ the scheduler, and leaves the shell responsive.
 
 ## Scope boundary
 
-Paging, disk scheduling, RAID, and I/O modes are explicit course-concept models
-used to verify my understanding; they are not claimed as production drivers.
+Paging, disk scheduling, RAID, and I/O modes are explicit software models; they
+are not claimed as production drivers.
 MiniFS is RAM-backed for one VM session. JAS OS does not claim ring-3 isolation,
-a hardware disk driver, networking, or chapter 14+ protection/security.
+a hardware disk driver, networking, or production security.

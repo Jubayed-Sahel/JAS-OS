@@ -50,7 +50,8 @@ metadata, disk-head movement, and I/O counters.
 
 - **Files** - browse, create, open, and delete MiniFS entries.
 - **Notes** - edit files stored in MiniFS.
-- **Terminal** - high-contrast shell with Feature Guide, Modules, scrolling, and STOP.
+- **Terminal** - high-contrast shell with Quick Start, command history, editable input,
+  Tab completion, contextual help, scrolling, and global STOP.
 - **Task Manager** - inspect processes and terminate a selected task.
 - **Calculator** - perform signed integer arithmetic.
 - **Settings** - change wallpaper and CPU scheduling policy.
@@ -125,13 +126,13 @@ The build generates `build/jas-os.iso` and compatibility copies for older
 VirtualBox attachments. The verified submission ISO is 1,523,712 bytes with:
 
 ```text
-SHA-256  CC89E64B14337AFAE5DAEE51B2C7A059C92BE3D808551495B41C981EAF17A2C1
+SHA-256  28A1E9BF74010670B09832022EF2FE6A84523097C372EA805F837D90E7E3BC58
 ```
 
 ## Terminal command reference
 
 ```text
-guide / modules
+quickstart / guide / modules / help / history
 status / services / boot / syscall
 tasks / create counter / ipc demo / thread demo|status|stop
 schedule rr|priority|fcfs|sjf / priority ID 0..9 / burst ID TICKS / timeline
@@ -144,6 +145,19 @@ disk demo|fcfs|sstf|scan|cscan|clook / raid
 io demo|status|poll|interrupt|dma|modes
 calc A OP B / notes / note write|read|append|delete
 stop / stop all / lab stop / clear / reboot / shutdown
+```
+
+Terminal keyboard shortcuts:
+
+```text
+Up / Down        recall command history
+Left / Right     move through the current command
+Home / End       jump to the start or end of the command
+Tab              complete common commands
+Page Up / Down   scroll terminal output
+Ctrl+C           stop all terminal background activity
+Ctrl+L           clear terminal output
+Escape           cancel the current input
 ```
 
 ## Course-project boundaries

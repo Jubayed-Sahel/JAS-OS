@@ -8,6 +8,8 @@
 static volatile char s_queue[32];
 static volatile uint8_t s_qhead, s_qtail;
 static volatile bool s_shift;
+static volatile bool s_ctrl;
+static volatile bool s_extended;
 static volatile int s_mx = 80, s_my = 80;
 static volatile bool s_left, s_right;
 static volatile uint8_t s_press_latch;
@@ -78,6 +80,17 @@ void keyboard_init(void)
 {
     s_qhead = s_qtail = 0;
     s_shift = false;
+    s_ctrl = false;
+    s_extended = false;
+}
+
+static void keyboard_queue(char c)
+{
+    uint8_t next = (uint8_t)((s_qhead + 1u) % sizeof(s_queue));
+    if (next != s_qtail) {
+        s_queue[s_qhead] = c;
+        s_qhead = next;
+    }
 }
 
 void mouse_init(void)
@@ -99,17 +112,38 @@ void mouse_init(void)
 void keyboard_irq(void)
 {
     uint8_t sc = inb(KBD_DATA);
-    if (sc == 0x2A || sc == 0x36) s_shift = true;
+    if (sc == 0xE0) {
+        s_extended = true;
+        pic_eoi(1);
+        return;
+    }
+    if (s_extended) {
+        s_extended = false;
+        if ((sc & 0x80) == 0) {
+            char key = 0;
+            if (sc == 0x48) key = KBD_KEY_UP;
+            else if (sc == 0x50) key = KBD_KEY_DOWN;
+            else if (sc == 0x4B) key = KBD_KEY_LEFT;
+            else if (sc == 0x4D) key = KBD_KEY_RIGHT;
+            else if (sc == 0x47) key = KBD_KEY_HOME;
+            else if (sc == 0x4F) key = KBD_KEY_END;
+            else if (sc == 0x49) key = KBD_KEY_PAGE_UP;
+            else if (sc == 0x51) key = KBD_KEY_PAGE_DOWN;
+            else if (sc == 0x53) key = KBD_KEY_DELETE;
+            if (key) keyboard_queue(key);
+        }
+        pic_eoi(1);
+        return;
+    }
+    if (sc == 0x1D) s_ctrl = true;
+    else if (sc == 0x9D) s_ctrl = false;
+    else if (sc == 0x2A || sc == 0x36) s_shift = true;
     else if (sc == 0xAA || sc == 0xB6) s_shift = false;
     else if ((sc & 0x80) == 0) {
         char c = s_shift ? kbd_shift[sc] : kbd_map[sc];
-        if (c) {
-            uint8_t next = (uint8_t)((s_qhead + 1u) % sizeof(s_queue));
-            if (next != s_qtail) {
-                s_queue[s_qhead] = c;
-                s_qhead = next;
-            }
-        }
+        if (s_ctrl && (c == 'c' || c == 'C')) c = KBD_KEY_CANCEL;
+        else if (s_ctrl && (c == 'l' || c == 'L')) c = KBD_KEY_CLEAR;
+        if (c) keyboard_queue(c);
     }
     pic_eoi(1);
 }

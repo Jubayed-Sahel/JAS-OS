@@ -1,4 +1,4 @@
-#include "lecture.h"
+#include "concepts.h"
 #include "event_log.h"
 #include "klib.h"
 
@@ -9,7 +9,7 @@ static char s_mailbox[IPC_CAPACITY];
 static bool s_mailbox_full;
 static uint32_t s_sent, s_received;
 
-void lecture_init(void)
+void concepts_init(void)
 {
     s_mailbox[0] = 0;
     s_mailbox_full = false;

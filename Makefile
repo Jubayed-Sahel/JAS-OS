@@ -11,7 +11,7 @@ KERNEL_OBJS = \
 	build/start.o build/klib.o build/hw.o build/input.o build/gfx.o \
 	build/gui.o build/kernel.o build/task.o build/scheduler.o \
 	build/memory.o build/paging.o build/banker.o build/filesystem.o \
-	build/sync.o build/demos.o build/event_log.o build/storage.o build/lecture.o \
+	build/sync.o build/demos.o build/event_log.o build/storage.o build/concepts.o \
 	build/commands.o
 
 .PHONY: all iso clean dirs

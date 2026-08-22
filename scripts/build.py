@@ -16,7 +16,7 @@ SOURCES = [
     "start.S",
     "klib.c", "hw.c", "input.c", "gfx.c", "gui.c", "kernel.c",
     "task.c", "scheduler.c", "memory.c", "paging.c", "banker.c",
-    "filesystem.c", "sync.c", "demos.c", "event_log.c", "storage.c", "lecture.c",
+    "filesystem.c", "sync.c", "demos.c", "event_log.c", "storage.c", "concepts.c",
     "commands.c",
 ]
 

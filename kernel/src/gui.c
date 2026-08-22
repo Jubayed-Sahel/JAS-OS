@@ -10,8 +10,9 @@
 
 #define MAX_WIN 8
 #define MAX_HITS 180
-#define TERM_LINES 72
+#define TERM_LINES 128
 #define TERM_COLS 86
+#define TERM_HISTORY 16
 #define TBAR 42
 #define TITLE_H 32
 #define SIDE_W 176
@@ -52,6 +53,11 @@ static int s_term_count, s_term_start;
 static int s_term_scroll;
 static char s_input[140];
 static size_t s_inlen;
+static size_t s_incursor;
+static char s_history[TERM_HISTORY][sizeof(s_input)];
+static int s_history_count;
+static int s_history_pos;
+static char s_history_draft[sizeof(s_input)];
 static bool s_term_focus;
 static bool s_dirty = true;
 static uint32_t s_last_status;
@@ -123,6 +129,16 @@ static const uint32_t APP_COL[] = {
     0x64748Bu, 0x7C3AEDu, 0x0891B2u
 };
 
+static const char *TERM_COMPLETIONS[] = {
+    "quickstart", "guide", "help", "modules", "dashboard", "status", "about", "sysinfo",
+    "services", "boot", "tasks", "timeline", "schedule status", "schedule rr",
+    "schedule priority", "schedule fcfs", "schedule sjf", "create counter",
+    "ipc demo", "thread demo", "rw demo", "start", "hold", "continue", "stop",
+    "banker status", "banker safe", "mem", "mem test", "fit demo", "page status",
+    "page demo", "replace demo", "ls", "pwd", "fsinfo", "disk demo", "raid",
+    "io status", "io demo", "calc ", "notes", "log", "history", "clear"
+};
+
 void terminal_clear(void)
 {
     s_term_count = 0;
@@ -157,6 +173,98 @@ void terminal_write(const char *text)
         if (*text != '\r') line[col++] = *text;
         text++;
     }
+}
+
+static void terminal_history_store(const char *command)
+{
+    if (!command || !command[0]) return;
+    if (s_history_count > 0 &&
+        kstrcmp(s_history[s_history_count - 1], command) == 0) {
+        s_history_pos = s_history_count;
+        return;
+    }
+    if (s_history_count == TERM_HISTORY) {
+        for (int i = 1; i < TERM_HISTORY; ++i)
+            ksnprintf(s_history[i - 1], sizeof(s_history[i - 1]), "%s", s_history[i]);
+        s_history_count--;
+    }
+    ksnprintf(s_history[s_history_count++], sizeof(s_history[0]), "%s", command);
+    s_history_pos = s_history_count;
+    s_history_draft[0] = 0;
+}
+
+static void terminal_history_recall(int direction)
+{
+    if (s_history_count == 0) return;
+    if (direction < 0) {
+        if (s_history_pos == s_history_count)
+            ksnprintf(s_history_draft, sizeof(s_history_draft), "%s", s_input);
+        if (s_history_pos > 0) s_history_pos--;
+    } else {
+        if (s_history_pos < s_history_count) s_history_pos++;
+    }
+    const char *value = s_history_pos == s_history_count
+                      ? s_history_draft : s_history[s_history_pos];
+    ksnprintf(s_input, sizeof(s_input), "%s", value);
+    s_inlen = kstrlen(s_input);
+    s_incursor = s_inlen;
+}
+
+static void terminal_history_print(void)
+{
+    if (s_history_count == 0) {
+        kprintf("  [!]  Command history is empty.\n");
+        return;
+    }
+    kprintf("\n  RECENT COMMANDS\n");
+    for (int i = 0; i < s_history_count; ++i)
+        kprintf("  %2d  %s\n", i + 1, s_history[i]);
+    kprintf("  Tip: use Up/Down to recall a command.\n");
+}
+
+static void terminal_complete(void)
+{
+    if (s_incursor != s_inlen) return;
+    if (s_inlen == 0) {
+        kprintf("  [TIP] Start with guide, dashboard, modules, or help.\n");
+        return;
+    }
+    int matches = 0;
+    const char *first = NULL;
+    size_t common = 0;
+    for (size_t i = 0; i < sizeof(TERM_COMPLETIONS) / sizeof(TERM_COMPLETIONS[0]); ++i) {
+        const char *candidate = TERM_COMPLETIONS[i];
+        if (kstrncmp(candidate, s_input, s_inlen) != 0) continue;
+        if (!first) {
+            first = candidate;
+            common = kstrlen(candidate);
+        } else {
+            size_t j = s_inlen;
+            while (j < common && first[j] == candidate[j]) ++j;
+            common = j;
+        }
+        matches++;
+    }
+    if (matches == 0) {
+        kprintf("  [!]  No completion for '%s'. Type help for all commands.\n", s_input);
+        return;
+    }
+    if (matches == 1) common = kstrlen(first);
+    if (common > s_inlen) {
+        if (common >= sizeof(s_input)) common = sizeof(s_input) - 1;
+        for (size_t i = 0; i < common; ++i) s_input[i] = first[i];
+        s_input[common] = 0;
+        s_inlen = s_incursor = common;
+        return;
+    }
+    kprintf("  Matches:");
+    int shown = 0;
+    for (size_t i = 0; i < sizeof(TERM_COMPLETIONS) / sizeof(TERM_COMPLETIONS[0]); ++i) {
+        if (kstrncmp(TERM_COMPLETIONS[i], s_input, s_inlen) == 0 && shown++ < 6)
+            kprintf("  %s", TERM_COMPLETIONS[i]);
+    }
+    if (matches > 6) kprintf("  ...");
+    kprintf("\n");
 }
 
 static void mark_dirty(void) { s_dirty = true; }
@@ -210,6 +318,7 @@ static int tagged_id(const char *cmd, const char *tag)
 static void run_command(const char *cmd)
 {
     if (!cmd || !cmd[0]) return;
+    if (kstrcmp(cmd, "history") == 0) { terminal_history_print(); mark_dirty(); return; }
     if (kstrncmp(cmd, "__note", 6) == 0) { note_command(cmd); mark_dirty(); return; }
     if (kstrncmp(cmd, "__fs", 4) == 0) { fs_command(cmd); mark_dirty(); return; }
     if (kstrncmp(cmd, "__calc", 6) == 0) { calc_command(cmd); mark_dirty(); return; }
@@ -459,12 +568,20 @@ static void term_command(const char *cmd)
     } else if (kstrcmp(cmd, "__term_down") == 0) {
         s_term_scroll -= 5;
         if (s_term_scroll < 0) s_term_scroll = 0;
+    } else if (kstrcmp(cmd, "__term_latest") == 0) {
+        s_term_scroll = 0;
+    } else if (kstrcmp(cmd, "__term_history") == 0) {
+        s_term_scroll = 0;
+        terminal_history_print();
     } else if (kstrcmp(cmd, "__term_help") == 0) {
         s_term_scroll = 0;
         commands_execute("help");
-    } else if (kstrcmp(cmd, "__term_lectures") == 0) {
+    } else if (kstrcmp(cmd, "__term_start") == 0) {
         s_term_scroll = 0;
-        commands_execute("lectures");
+        commands_execute("quickstart");
+    } else if (kstrcmp(cmd, "__term_modules") == 0) {
+        s_term_scroll = 0;
+        commands_execute("modules");
     } else if (kstrcmp(cmd, "__term_guide") == 0) {
         s_term_scroll = 0;
         commands_execute("guide");
@@ -498,13 +615,17 @@ static void draw_term(window_t *w)
     right -= 50;
     draw_btn(right - 48, y + 4, 48, 22, "Guide", BTN_ACCENT, "__term_guide");
     right -= 54;
-    draw_btn(right - 68, y + 4, 68, 22, "Lectures", BTN_NORMAL, "__term_lectures");
+    draw_btn(right - 68, y + 4, 68, 22, "Start", BTN_OK, "__term_start");
     right -= 74;
     draw_btn(right - 44, y + 4, 44, 22, "Help", BTN_NORMAL, "__term_help");
     right -= 50;
-    draw_btn(right - 26, y + 4, 26, 22, "Dn", BTN_NORMAL, "__term_down");
-    right -= 32;
-    draw_btn(right - 26, y + 4, 26, 22, "Up", BTN_NORMAL, "__term_up");
+    draw_btn(right - 54, y + 4, 54, 22, "Hist", BTN_NORMAL, "__term_history");
+    right -= 60;
+    draw_btn(right - 42, y + 4, 42, 22, "Live", BTN_NORMAL, "__term_latest");
+    right -= 48;
+    draw_btn(right - 30, y + 4, 30, 22, "New", BTN_NORMAL, "__term_down");
+    right -= 36;
+    draw_btn(right - 30, y + 4, 30, 22, "Old", BTN_NORMAL, "__term_up");
 
     int body_y = y + 34;
     int body_h = panel_h - 38;
@@ -571,15 +692,29 @@ static void draw_term(window_t *w)
     gfx_fill(w->x + 8, prompt_y, w->w - 16, 40, 0x0F1B2Du);
     gfx_rect(w->x + 8, prompt_y, w->w - 16, 40, s_term_focus ? 0x2DD4BFu : 0x64748Bu);
     gfx_text(w->x + 16, prompt_y + 5, "COMMAND", s_term_focus ? 0x5EEAD4u : 0x94A3B8u);
+    gfx_text(w->x + 92, prompt_y + 5,
+             "Enter run | Up/Down history | Tab complete | Ctrl+C stop | Esc clear",
+             0x94A3B8u);
     char prompt[180];
     ksnprintf(prompt, sizeof(prompt), "%s $ %s", commands_cwd(), s_input);
     int prompt_cols = (w->w - 34) / 8;
-    const char *visible_prompt = prompt;
     int prompt_length = (int)kstrlen(prompt);
-    if (prompt_length > prompt_cols) visible_prompt = prompt + prompt_length - prompt_cols;
+    int cursor_index = (int)kstrlen(commands_cwd()) + 3 + (int)s_incursor;
+    int view_start = 0;
+    if (prompt_length > prompt_cols) {
+        view_start = cursor_index - prompt_cols + 2;
+        if (view_start < 0) view_start = 0;
+        if (view_start > prompt_length - prompt_cols) view_start = prompt_length - prompt_cols;
+    }
+    char visible_prompt[180];
+    int visible_length = prompt_length - view_start;
+    if (visible_length > prompt_cols) visible_length = prompt_cols;
+    for (int i = 0; i < visible_length; ++i) visible_prompt[i] = prompt[view_start + i];
+    visible_prompt[visible_length] = 0;
     gfx_text(w->x + 16, prompt_y + 21, visible_prompt, 0xF0FDFAu);
     if (s_term_focus && ((now_ms() / 500) & 1) == 0) {
-        int cx = w->x + 16 + gfx_text_width(visible_prompt) + 1;
+        int cursor_column = cursor_index - view_start;
+        int cx = w->x + 16 + cursor_column * 8 + 1;
         if (cx < w->x + w->w - 18) gfx_fill(cx, prompt_y + 19, 8, 13, 0x5EEAD4u);
     }
 }
@@ -1133,6 +1268,18 @@ static void draw_clock(window_t *w)
 
 /* -------------------- OS Lab -------------------- */
 
+static const char *LAB_LABELS[] = {
+    "Kernel Status", "Services + Boot", "Processes + IPC", "Threads",
+    "CPU Scheduling", "Synchronization", "Deadlock Safety", "Memory Allocation",
+    "Virtual Memory", "File System", "Mass Storage", "I/O Systems"
+};
+
+static const char *LAB_COMMANDS[] = {
+    "dashboard", "boot", "ipc demo", "thread demo",
+    "schedule status", "rw demo", "banker status", "mem test",
+    "page demo", "fsinfo", "disk demo", "io demo"
+};
+
 static void lab_command(const char *cmd)
 {
     if (kstrcmp(cmd, "__lab_stop") == 0) {
@@ -1141,42 +1288,33 @@ static void lab_command(const char *cmd)
         commands_execute("lab stop");
         return;
     }
-    int chapter = tagged_id(cmd, "__lab_");
-    if (chapter < 1 || chapter > 13) return;
+    int feature = tagged_id(cmd, "__lab_");
+    if (feature < 0 || feature >= 12) return;
     open_window(WIN_TERM);
-    char evidence[24];
-    ksnprintf(evidence, sizeof(evidence), "present %d", chapter);
-    kprintf("\n[OS LAB] My understanding evidence - Chapter %d\n", chapter);
-    commands_execute(evidence);
+    kprintf("\n[OS LAB] Running %s\n", LAB_LABELS[feature]);
+    commands_execute(LAB_COMMANDS[feature]);
 }
 
 static void draw_lab(window_t *w)
 {
     int x = w->x + 16, y = w->y + TITLE_H + 12;
-    gfx_text(x, y, "Click a lecture concept to run my implementation in Terminal.", COL_INK2);
+    gfx_text(x, y, "Click a kernel feature to run it in Terminal.", COL_INK2);
     y += 22;
-    static const char *labels[] = {
-        "01  OS Overview", "02  Services + Boot", "03  Processes + IPC",
-        "04  Threads", "05  CPU Scheduling", "06  Synchronization",
-        "07  Deadlocks", "08  Main Memory", "09  Virtual Memory",
-        "10  File Interface", "11  FS Implementation", "12  Mass Storage",
-        "13  I/O Systems"
-    };
     int gap = 10;
     int bw = (w->w - 42) / 2;
     int bh = 38;
-    for (int i = 0; i < 13; ++i) {
+    for (int i = 0; i < 12; ++i) {
         int col = i & 1;
         int row = i / 2;
         int bx = x + col * (bw + gap);
         int by = y + row * (bh + 8);
         char command[16];
-        ksnprintf(command, sizeof(command), "__lab_%d", i + 1);
-        draw_btn(bx, by, bw, bh, labels[i], i < 11 ? BTN_ACCENT : BTN_NORMAL, command);
+        ksnprintf(command, sizeof(command), "__lab_%d", i);
+        draw_btn(bx, by, bw, bh, LAB_LABELS[i], BTN_ACCENT, command);
     }
-    draw_btn(x + bw + gap, y + 6 * (bh + 8), bw, bh,
+    draw_btn(x, y + 6 * (bh + 8), w->w - 32, bh,
              "STOP ALL ACTIVITY", BTN_DANGER, "__lab_stop");
-    gfx_text(x, w->y + w->h - 20, "Chapters 1-11 core | 12-13 focused labs | 14+ excluded", COL_INK2);
+    gfx_text(x, w->y + w->h - 20, "Feature labs use the same commands as Terminal.", COL_INK2);
 }
 
 static void draw_window(window_t *w)
@@ -1270,7 +1408,7 @@ static void draw_splash(uint32_t elapsed)
     gfx_text_scaled(tx, ty, msg, ink, scale);
     gfx_text((sw - gfx_text_width("JAS OS")) / 2, ty + 52, "JAS OS", sub);
     char edition[48];
-    ksnprintf(edition, sizeof(edition), "v%s | CSE 323 chapters 1-13", KERNEL_VERSION);
+    ksnprintf(edition, sizeof(edition), "v%s | freestanding x86 kernel", KERNEL_VERSION);
     gfx_text((sw - gfx_text_width(edition)) / 2, ty + 70, edition, sub);
 }
 
@@ -1426,16 +1564,66 @@ static void handle_keys(void)
         }
         if (c == '\n') {
             s_input[s_inlen] = 0;
+            if (s_inlen == 0) continue;
             s_term_scroll = 0;
             kprintf("%s $ %s\n", commands_cwd(), s_input);
+            terminal_history_store(s_input);
             run_command(s_input);
             s_inlen = 0;
+            s_incursor = 0;
             s_input[0] = 0;
         } else if (c == '\b') {
-            if (s_inlen) s_input[--s_inlen] = 0;
-        } else if (s_inlen + 1 < sizeof(s_input)) {
-            s_input[s_inlen++] = c;
+            if (s_incursor > 0) {
+                for (size_t i = s_incursor; i <= s_inlen; ++i)
+                    s_input[i - 1] = s_input[i];
+                s_incursor--;
+                s_inlen--;
+            }
+        } else if ((unsigned char)c == KBD_KEY_DELETE) {
+            if (s_incursor < s_inlen) {
+                for (size_t i = s_incursor + 1; i <= s_inlen; ++i)
+                    s_input[i - 1] = s_input[i];
+                s_inlen--;
+            }
+        } else if (c == KBD_KEY_LEFT) {
+            if (s_incursor > 0) s_incursor--;
+        } else if (c == KBD_KEY_RIGHT) {
+            if (s_incursor < s_inlen) s_incursor++;
+        } else if (c == KBD_KEY_HOME) {
+            s_incursor = 0;
+        } else if (c == KBD_KEY_END) {
+            s_incursor = s_inlen;
+        } else if (c == KBD_KEY_UP) {
+            terminal_history_recall(-1);
+        } else if (c == KBD_KEY_DOWN) {
+            terminal_history_recall(1);
+        } else if (c == KBD_KEY_PAGE_UP) {
+            s_term_scroll += 8;
+        } else if (c == KBD_KEY_PAGE_DOWN) {
+            s_term_scroll -= 8;
+            if (s_term_scroll < 0) s_term_scroll = 0;
+        } else if (c == '\t') {
+            terminal_complete();
+        } else if ((unsigned char)c == KBD_KEY_CANCEL) {
+            kprintf("^C\n");
+            s_inlen = s_incursor = 0;
+            s_input[0] = 0;
+            s_history_pos = s_history_count;
+            commands_execute("stop");
+        } else if ((unsigned char)c == KBD_KEY_CLEAR) {
+            terminal_clear();
+        } else if ((unsigned char)c == 27) {
+            s_inlen = s_incursor = 0;
+            s_input[0] = 0;
+            s_history_pos = s_history_count;
+        } else if ((unsigned char)c >= 32 && (unsigned char)c <= 126 &&
+                   s_inlen + 1 < sizeof(s_input)) {
+            for (size_t i = s_inlen + 1; i > s_incursor; --i)
+                s_input[i] = s_input[i - 1];
+            s_input[s_incursor++] = c;
+            s_inlen++;
             s_input[s_inlen] = 0;
+            s_history_pos = s_history_count;
         }
     }
 }
@@ -1454,10 +1642,14 @@ void gui_init(void)
     s_tm_status[0] = 0;
     calc_reset();
     terminal_clear();
+    s_inlen = s_incursor = 0;
+    s_input[0] = 0;
+    s_history_count = s_history_pos = 0;
+    s_history_draft[0] = 0;
     kprintf("JAS OS x86 v%s ready.\n", KERNEL_VERSION);
     kprintf("Sidebar: Files | Notes | Terminal | Tasks | Calc | Settings | Clock | OS Lab\n");
-    kprintf("Understanding guide is ready - click Guide or type guide\n");
-    kprintf("Use present 1..13 to prove each implemented lecture concept\n");
+    kprintf("Quick start: quickstart | guide | dashboard | help\n");
+    kprintf("Keys: Up/Down history | Tab complete | Ctrl+C stop | Ctrl+L clear\n");
 
     s_splash = true;
     s_splash_start = now_ms();

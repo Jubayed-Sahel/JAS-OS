@@ -68,7 +68,7 @@ def make_iso(floppy: bytes, out_path: str) -> None:
     floppy_lba = 24
     floppy_sectors = (len(floppy) + SECTOR - 1) // SECTOR
     readme_text = (
-        b"JAS OS x86 lecture-concept kernel\n"
+        b"JAS OS freestanding x86 kernel\n"
         b"Boot this ISO in VirtualBox/QEMU (BIOS, not EFI).\n"
         b"Set pointing device to PS/2 Mouse.\n"
     )

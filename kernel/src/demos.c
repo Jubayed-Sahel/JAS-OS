@@ -21,13 +21,13 @@ static kernel_semaphore_t s_empty_slots, s_full_slots, s_buffer_mutex;
 static char s_log[DEMO_LOG_CAP][80];
 static size_t s_log_start, s_log_count;
 
-/* Chapter 4: two schedulable workers sharing one address-space value. */
+/* Two schedulable workers sharing one address-space value. */
 static bool s_threads_started;
 static uint32_t s_thread_ids[2], s_shared_counter;
 static thread_context_t s_thread_contexts[2];
 static kernel_semaphore_t s_thread_mutex;
 
-/* Chapter 6: classic first-readers-writers semaphore solution. */
+/* Classic first-readers-writers semaphore solution. */
 static bool s_rw_started;
 static uint32_t s_reader_ids[2], s_writer_id, s_reader_count, s_rw_value;
 static rw_context_t s_reader_contexts[2], s_writer_context;

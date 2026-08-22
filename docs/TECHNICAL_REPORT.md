@@ -15,50 +15,49 @@ The formatted report is available as [PDF](JAS-OS-Technical-Report.pdf) and
 ## 1. Executive summary
 
 JAS OS is a bootable, freestanding 32-bit x86 course-project operating system.
-The motive is to implement, test, and prove **my own understanding** of the main
-CSE 323 lecture concepts from chapters 1-13. The project is not intended to
-teach other people. Instead, every feature gives me observable evidence that I
-can connect a lecture concept to code, changing kernel state, and an algorithmic
-result.
+It boots from an ISO in Oracle VirtualBox and provides a graphical desktop,
+terminal, applications, and observable kernel subsystems. Live output includes
+task states, scheduling activity, synchronization values, memory statistics,
+deadlock safety results, paging state, file-system metadata, storage calculations,
+and I/O counters.
 
-## 2. Project objective and scope
+## 2. System overview and scope
 
-The earlier project was an ESP32-S3 mini-kernel. My objective was to transfer
-its useful operating-system ideas to a PC-style x86 kernel that boots from an ISO
-in Oracle VirtualBox. I included the main concepts from chapters 1-13 and
-excluded chapter 14 onward as required.
+JAS OS transfers the useful operating-system components of an earlier ESP32-S3
+mini-kernel to a PC-style x86 environment. The result includes a custom boot
+path, protected-mode kernel, graphical desktop, terminal, Files, Notes, Task
+Manager, Calculator, Settings, Clock, and OS Lab.
 
-The result includes a graphical desktop, terminal, Files, Notes, Task Manager,
-Calculator, Settings, Clock, and OS Lab. These applications make the kernel
-state easier for me to inspect during assessment; they are not presented as a
-teaching platform.
+The kernel includes scheduling, synchronization, deadlock avoidance, memory
+allocation, paging, file-system, storage, and I/O modules. It does not claim
+user-mode isolation, networking, production hardware drivers, or permanent
+disk-backed persistence.
 
-## 3. Implemented lecture concepts
+## 3. Implemented features
 
-| Chapter | Concept | Evidence in JAS OS |
-|---:|---|---|
-| 1 | OS organization | Live subsystem dashboard |
-| 2 | Services and boot | BIOS-to-protected-mode trace and syscall aliases |
-| 3 | Processes and IPC | Task states and bounded mailbox send/receive |
-| 4 | Threads | Shared counter workers |
-| 5 | CPU scheduling | RR, Priority, FCFS, SJF, and timeline |
-| 6 | Synchronization | Semaphores and readers-writers |
-| 7 | Deadlocks | Banker's safety algorithm and safe sequence |
-| 8 | Main memory | First-fit heap, splitting, and coalescing |
-| 9 | Virtual memory | Paging, faults, frames, and FIFO replacement |
-| 10 | File-system interface | MiniFS directories and file operations |
-| 11 | File-system implementation | Allocation-method comparison |
-| 12 | Mass storage | Five disk-scheduling algorithms and RAID model |
-| 13 | I/O systems | Polling, interrupts, DMA, and live counters |
+| Feature | Evidence in JAS OS |
+|---|---|
+| OS organization | Live subsystem dashboard |
+| Services and boot | BIOS-to-protected-mode trace and syscall aliases |
+| Processes and IPC | Task states and bounded mailbox send/receive |
+| Threads | Shared-counter workers |
+| CPU scheduling | RR, Priority, FCFS, SJF, and timeline |
+| Synchronization | Semaphores and readers-writers |
+| Deadlock avoidance | Banker's safety algorithm and safe sequence |
+| Main memory | First-fit heap, splitting, and coalescing |
+| Virtual memory | Paging, faults, frames, and FIFO replacement |
+| File system | MiniFS directories, files, and allocation comparison |
+| Mass storage | Disk-scheduling algorithms and RAID model |
+| I/O systems | Polling, interrupts, DMA, and live counters |
 
-## 4. Evidence of my understanding
+## 4. Demonstration interface
 
-The `explain CH` command states the concept and identifies my implementation.
-The `present CH` command then runs that implementation and prints live evidence.
-For example, scheduling changes the CPU timeline, readers-writers changes
-semaphore-protected state, Banker's algorithm calculates a safe sequence, and
-paging changes frame ownership and fault counts. OS Lab calls the same path with
-buttons. `stop` ends all non-shell activity while keeping the terminal usable.
+The terminal Feature Guide and Modules screen map each subsystem to direct
+commands. Scheduling changes the CPU timeline; readers-writers changes
+semaphore-protected state; Banker's algorithm calculates a safe sequence; and
+paging changes frame ownership and fault counts. OS Lab invokes the same kernel
+commands through buttons. `stop` ends all non-shell activity while keeping the
+terminal usable.
 
 ## 5. Challenges using the STAR format
 
@@ -67,8 +66,9 @@ buttons. `stop` ends all non-shell activity while keeping the terminal usable.
 **Situation:** The previous mini-kernel depended on an ESP32-S3 runtime, while
 this project needed to boot as a PC operating system in Oracle VirtualBox.
 
-**Task:** Preserve the relevant course concepts without a host operating system
-or standard library and provide keyboard, mouse, and graphical output.
+**Task:** Preserve the relevant operating-system components without a host
+operating system or standard library and provide keyboard, mouse, and graphical
+output.
 
 **Action:** I implemented a BIOS/El Torito loader, VESA framebuffer setup, A20,
 GDT and protected-mode transition, then added IDT/PIC/PIT, serial, PS/2 input,
@@ -77,35 +77,35 @@ graphics, and freestanding runtime modules.
 **Result:** JAS OS boots from its own ISO into an interactive 1024×768 desktop,
 and the cross-compiler build completes without warnings.
 
-### Challenge 2 — Proving understanding instead of printing labels
+### Challenge 2 — Producing live evidence instead of static labels
 
-**Situation:** Printing algorithm names would not demonstrate that I understand
-how the concepts operate or affect system state.
+**Situation:** Static interface labels would not show whether the algorithms
+were connected to changing system state.
 
-**Task:** Connect every included chapter to stateful code and observable results.
+**Task:** Connect every major subsystem to stateful code and observable results.
 
 **Action:** I separated scheduling, tasks, synchronization, memory, paging,
 Banker's algorithm, files, storage, and I/O into kernel modules. I exposed task
 states, timelines, semaphore values, heap statistics, safe sequences, page
 faults, disk-head movement, and I/O counters.
 
-**Result:** Chapters 1-13 each have a command and OS Lab button backed by live
-kernel state, allowing me to explain what changed and why.
+**Result:** Each feature has a terminal command and OS Lab button backed by live
+kernel state, making state changes and algorithm results directly observable.
 
-### Challenge 3 — Organizing evidence during assessment
+### Challenge 3 — Organizing demonstrations during assessment
 
 **Situation:** The command set became difficult to remember, and background
-output could hide the result I needed to discuss.
+output could hide the result being discussed.
 
-**Task:** Make my implementation evidence easy to find without replacing the
+**Task:** Make implementation evidence easy to find without replacing the
 underlying algorithms with static interface text.
 
-**Action:** I added the understanding Guide, `explain CH`, `present CH`, chapter
-map, readable terminal layout, scrolling controls, and OS Lab shortcuts. Each
-path identifies the concept, my implementation, and its live proof.
+**Action:** I added the Feature Guide, Modules screen, readable terminal layout,
+scrolling controls, and OS Lab shortcuts. Each path opens a direct command for a
+specific kernel subsystem.
 
-**Result:** I can follow a consistent assessment route and connect each lecture
-concept to the corresponding source-backed result.
+**Result:** The interface now provides a consistent route from a feature name to
+its source-backed live result.
 
 ### Challenge 4 — Stopping every background task safely
 
@@ -126,7 +126,7 @@ background activity while the shell remains ready for the next command.
 
 - The freestanding kernel builds without warnings.
 - The ISO boots in a 32-bit BIOS VirtualBox VM at 1024×768.
-- The terminal and OS Lab expose chapters 1-13 through live state.
+- The terminal and OS Lab expose each major subsystem through live state.
 - The global stop leaves the terminal responsive.
 - The narrated demonstration is between two and five minutes and uses genuine
   JAS OS captures.
@@ -142,6 +142,6 @@ background activity while the shell remains ready for the next command.
 
 JAS OS is a course-project kernel, not a production operating system. Tasks are
 cooperative, applications execute in kernel space, and MiniFS is RAM-backed.
-Paging, disk, RAID, and I/O are transparent models used to test my understanding.
+Paging, disk, RAID, and I/O are transparent software models.
 The project does not claim ring-3 isolation, production device drivers,
-networking, persistence, or chapter 14+ protection and security.
+networking, persistence, or production security.

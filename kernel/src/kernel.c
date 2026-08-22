@@ -7,7 +7,7 @@
 #include "hw.h"
 #include "input.h"
 #include "klib.h"
-#include "lecture.h"
+#include "concepts.h"
 #include "memory.h"
 #include "paging.h"
 #include "scheduler.h"
@@ -45,7 +45,7 @@ void kernel_main(boot_info_t *info)
     paging_init();
     banker_init_demo();
     storage_init();
-    lecture_init();
+    concepts_init();
     commands_init();
     minifs_init();
     minifs_write("/welcome.txt", "Welcome to JAS OS. Click the desktop icons or type help.");

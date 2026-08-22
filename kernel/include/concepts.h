@@ -1,5 +1,5 @@
-#ifndef MINI_KERNEL_LECTURE_H
-#define MINI_KERNEL_LECTURE_H
+#ifndef JAS_OS_CONCEPTS_H
+#define JAS_OS_CONCEPTS_H
 
 #include "ktypes.h"
 
@@ -15,7 +15,7 @@ typedef struct {
     int worst_fit;
 } fit_result_t;
 
-void lecture_init(void);
+void concepts_init(void);
 replacement_result_t replacement_compare(const uint8_t *references, size_t count,
                                          size_t frame_count);
 fit_result_t fit_compare(const uint16_t *holes, size_t count, uint16_t request);
