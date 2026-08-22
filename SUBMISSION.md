@@ -27,6 +27,7 @@
 
 - [x] Clean `i686-elf-gcc` build with no warnings or errors
 - [x] Bootable ISO generated and mounted successfully in Oracle VirtualBox
+- [x] VirtualBox terminal regression suite passed all 208 command and power checks
 - [x] Terminal feature guide visible at 1024x768
 - [x] Global stop command retains the terminal shell
 - [x] Report rendered to six pages and visually inspected

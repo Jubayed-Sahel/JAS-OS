@@ -129,6 +129,23 @@ VirtualBox attachments. The verified submission ISO is 1,523,712 bytes with:
 SHA-256  28A1E9BF74010670B09832022EF2FE6A84523097C372EA805F837D90E7E3BC58
 ```
 
+## Test every terminal command
+
+The VirtualBox regression suite boots the versioned `jas-os.iso`, types commands
+through the VM keyboard, and verifies the real COM1 terminal output. It covers
+all documented commands and aliases, expected validation errors, stateful
+process/file/note operations, the global stop command, and isolated
+reboot/shutdown/poweroff checks.
+
+With a powered-off VirtualBox VM named `JAS OS`, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test_terminal_commands.ps1
+```
+
+The verified run on 2026-08-22 passed **208/208** checks. Detailed scope and
+results are recorded in [`docs/TERMINAL_TEST_REPORT.md`](docs/TERMINAL_TEST_REPORT.md).
+
 ## Terminal command reference
 
 ```text
