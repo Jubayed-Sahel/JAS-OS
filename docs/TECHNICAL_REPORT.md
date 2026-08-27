@@ -52,10 +52,9 @@ evidence of implementation behavior.
 
 ## 2. System Overview and Scope
 
-JAS OS adapts core operating-system components from an earlier ESP32-S3
-mini-kernel to a PC-style x86 environment. The resulting platform includes a
-custom boot path, a protected-mode kernel, a graphical desktop, Terminal,
-Files, Notes, Task Manager, Calculator, Settings, Clock, and OS Lab.
+JAS OS is designed as a PC-style x86 platform with a custom boot path, a
+protected-mode kernel, a graphical desktop, Terminal, Files, Notes, Task
+Manager, Calculator, Settings, Clock, and OS Lab.
 
 The kernel includes scheduling, synchronization, deadlock avoidance, memory
 allocation, paging, file-system, storage, and I/O modules. The implementation is
@@ -115,10 +114,10 @@ the terminal available for further interaction.
 The following challenges are documented using the Situation, Task, Action, and
 Result (STAR) structure.
 
-### Challenge 1 — Moving from ESP32-S3 to a bootable x86 ISO
+### Challenge 1 — Building a bootable x86 ISO
 
-**Situation:** The previous mini-kernel depended on an ESP32-S3 runtime, while
-this project needed to boot as a PC operating system in Oracle VirtualBox.
+**Situation:** The project needed to boot as a PC operating system in Oracle
+VirtualBox rather than rely on a host operating system or standard library.
 
 **Task:** Preserve the relevant operating-system components without a host
 operating system or standard library and provide keyboard, mouse, and graphical
