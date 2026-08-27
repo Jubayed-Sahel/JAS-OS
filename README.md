@@ -24,7 +24,7 @@ terminal, OS Lab, and live status views.
 
 Repository: <https://github.com/Jubayed-Sahel/JAS-OS>
 
-<video controls width="100%" src="https://github.com/Jubayed-Sahel/JAS-OS/raw/refs/heads/main/Demonstration%20video.mp4">
+<video controls width="100%" src="https://media.githubusercontent.com/media/Jubayed-Sahel/JAS-OS/main/Demonstration%20video.mp4">
         Your browser does not support embedded video. [Open the demonstration video on GitHub](https://github.com/Jubayed-Sahel/JAS-OS/blob/main/Demonstration%20video.mp4).
 </video>
 
