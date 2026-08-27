@@ -6,7 +6,7 @@
 | Student | Jubayed Ahmed Sahel |
 | Student ID | 2221173642 |
 | Course | CSE 323, Section 3 |
-| Repository | <https://github.com/Jubayed-Sahel/JAS-OS> |
+| Repository | [JAS OS on GitHub](https://github.com/Jubayed-Sahel/JAS-OS) |
 
 ## Abstract
 
