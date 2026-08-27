@@ -17,21 +17,45 @@ system concepts observable through live state rather than static interface
 labels, including task scheduling, synchronization, memory allocation, paging,
 deadlock avoidance, file management, storage algorithms, and I/O models.
 
+## Introduction
+
+Operating-system concepts are easiest to understand when their results can be
+observed while the system is running. JAS OS was developed to provide that
+practical view within a self-contained x86 environment. Instead of presenting
+only screenshots or descriptive labels, the project connects each major concept
+to an executable kernel module and exposes its changing state through the
+terminal and graphical OS Lab interface.
+
+The project has three primary objectives. First, it establishes a complete boot
+path from a BIOS-compatible ISO to a 32-bit protected-mode kernel. Second, it
+implements representative operating-system mechanisms, including scheduling,
+synchronization, memory management, paging, file management, storage, and I/O.
+Third, it provides a clear demonstration path through which a user can trigger
+those mechanisms and inspect their results. These objectives make the system
+useful both as a working course project and as a repeatable platform for
+explaining operating-system behavior.
+
+The report describes the system's architecture, implemented features,
+engineering challenges, and verification results. It also identifies the
+boundaries of the implementation so that the educational models are not
+mistaken for production operating-system facilities.
+
 ## 1. Executive Summary
 
-JAS OS is a bootable, freestanding 32-bit x86 course-project operating system.
-It boots from an ISO in Oracle VirtualBox and provides a graphical desktop,
-terminal, applications, and observable kernel subsystems. Live output includes
-task states, scheduling activity, synchronization values, memory statistics,
-deadlock safety results, paging state, file-system metadata, storage calculations,
-and I/O counters.
+JAS OS is a bootable, freestanding 32-bit x86 operating system developed as a
+CSE 323 course project. It boots from an ISO in Oracle VirtualBox and provides
+an interactive desktop, terminal, applications, and observable kernel
+subsystems. The system exposes task states, scheduling activity,
+synchronization values, memory statistics, deadlock-safety results, paging
+state, file-system metadata, storage calculations, and I/O counters as live
+evidence of implementation behavior.
 
 ## 2. System Overview and Scope
 
-JAS OS transfers the useful operating-system components of an earlier ESP32-S3
-mini-kernel to a PC-style x86 environment. The result includes a custom boot
-path, protected-mode kernel, graphical desktop, terminal, Files, Notes, Task
-Manager, Calculator, Settings, Clock, and OS Lab.
+JAS OS adapts core operating-system components from an earlier ESP32-S3
+mini-kernel to a PC-style x86 environment. The resulting platform includes a
+custom boot path, a protected-mode kernel, a graphical desktop, Terminal,
+Files, Notes, Task Manager, Calculator, Settings, Clock, and OS Lab.
 
 The kernel includes scheduling, synchronization, deadlock avoidance, memory
 allocation, paging, file-system, storage, and I/O modules. The implementation is
@@ -78,12 +102,13 @@ The principal feature areas are summarized below.
 
 ## 4. Demonstration Interface
 
-The terminal Feature Guide and Modules screen map each subsystem to direct
-commands. Scheduling changes the CPU timeline; readers-writers changes
-semaphore-protected state; Banker's algorithm calculates a safe sequence; and
-paging changes frame ownership and fault counts. OS Lab invokes the same kernel
-commands through buttons. `stop` ends all non-shell activity while keeping the
-terminal usable.
+The terminal Feature Guide and Modules screen connect each subsystem to a direct
+command. A scheduling-policy change is reflected in the CPU timeline; the
+readers-writers demonstration updates semaphore-protected state; Banker's
+algorithm produces a safe sequence; and paging updates frame ownership and
+fault counts. OS Lab exposes the same kernel operations through graphical
+controls. The global `stop` command terminates non-shell activity while keeping
+the terminal available for further interaction.
 
 ## 5. Engineering Challenges and Solutions
 
@@ -99,12 +124,13 @@ this project needed to boot as a PC operating system in Oracle VirtualBox.
 operating system or standard library and provide keyboard, mouse, and graphical
 output.
 
-**Action:** I implemented a BIOS/El Torito loader, VESA framebuffer setup, A20,
-GDT and protected-mode transition, then added IDT/PIC/PIT, serial, PS/2 input,
-graphics, and freestanding runtime modules.
+**Action:** The implementation introduced a BIOS/El Torito loader, VESA
+framebuffer setup, A20 handling, a GDT, and a protected-mode transition. It then
+added IDT/PIC/PIT support, serial output, PS/2 input, graphics, and freestanding
+runtime modules.
 
-**Result:** JAS OS boots from its own ISO into an interactive 1024×768 desktop,
-and the cross-compiler build completes without warnings.
+**Result:** JAS OS boots from its own ISO into an interactive 1024x768 desktop,
+and the cross-compiler build completes without warnings or errors.
 
 ### Challenge 2 — Producing live evidence instead of static labels
 
@@ -113,10 +139,10 @@ were connected to changing system state.
 
 **Task:** Connect every major subsystem to stateful code and observable results.
 
-**Action:** I separated scheduling, tasks, synchronization, memory, paging,
-Banker's algorithm, files, storage, and I/O into kernel modules. I exposed task
-states, timelines, semaphore values, heap statistics, safe sequences, page
-faults, disk-head movement, and I/O counters.
+**Action:** Scheduling, tasks, synchronization, memory, paging, Banker's
+algorithm, files, storage, and I/O were separated into focused kernel modules.
+The interface exposes task states, timelines, semaphore values, heap
+statistics, safe sequences, page faults, disk-head movement, and I/O counters.
 
 **Result:** Each feature has a terminal command and OS Lab button backed by live
 kernel state, making state changes and algorithm results directly observable.
@@ -129,9 +155,9 @@ output could hide the result being discussed.
 **Task:** Make implementation evidence easy to find without replacing the
 underlying algorithms with static interface text.
 
-**Action:** I added the Feature Guide, Modules screen, readable terminal layout,
-scrolling controls, and OS Lab shortcuts. Each path opens a direct command for a
-specific kernel subsystem.
+**Action:** The Feature Guide, Modules screen, readable terminal layout,
+scrolling controls, and OS Lab shortcuts were added. Each path leads to a direct
+command for a specific kernel subsystem.
 
 **Result:** The interface now provides a consistent route from a feature name to
 its source-backed live result.
@@ -144,9 +170,9 @@ one demonstration.
 
 **Task:** Stop all background activity without terminating the shell.
 
-**Action:** The global stop handler calls each lab's normal shutdown, scans the
-task table, terminates remaining non-shell tasks, and restores scheduler state.
-Specific lab controls remain available.
+**Action:** The global stop handler calls each laboratory's normal shutdown,
+scans the task table, terminates remaining non-shell tasks, and restores
+scheduler state. Controls for individual laboratories remain available.
 
 **Result:** `stop`, `stop all`, `lab stop`, and the red STOP button end terminal
 background activity while the shell remains ready for the next command.
@@ -170,8 +196,8 @@ background activity while the shell remains ready for the next command.
 4. Open Terminal and run `guide`, `status`, or any feature command listed in
    the repository README.
 
-The project is designed for transparent classroom demonstration: each command
-routes to the corresponding kernel module, and state changes can be observed in
+This procedure supports transparent classroom evaluation: each command routes to
+the corresponding kernel module, and resulting state changes can be observed in
 the terminal or OS Lab interface.
 
 ## 7. Project Deliverables
@@ -182,8 +208,32 @@ the terminal or OS Lab interface.
 
 ## 8. Limitations and Scope Boundary
 
-JAS OS is a course-project kernel, not a production operating system. Tasks are
-cooperative, applications execute in kernel space, and MiniFS is RAM-backed.
-Paging, disk, RAID, and I/O are transparent software models.
-The project does not claim ring-3 isolation, production device drivers,
-networking, persistence, or production security.
+JAS OS is an educational course-project kernel, not a production operating
+system. Tasks are cooperative, applications execute in kernel space, and MiniFS
+is RAM-backed. Paging, disk, RAID, and I/O are transparent software models.
+Accordingly, the project does not claim ring-3 isolation, production device
+drivers, networking, persistent storage, or production security.
+
+## 9. Conclusion
+
+JAS OS demonstrates that a compact freestanding x86 kernel can present a broad
+set of operating-system concepts through one coherent, interactive platform.
+The project brings together bootstrapping, protected-mode execution, hardware
+initialization, scheduling, synchronization, memory management, paging, file
+management, storage, and I/O. Each area is connected to live commands and
+graphical controls, allowing system behavior to be examined as it changes.
+
+The most significant outcome is the connection between implementation and
+evidence. A task table exposes scheduler state, demonstrations reveal
+semaphore and shared-resource behavior, Banker's algorithm reports safety
+decisions, and memory, paging, storage, and I/O modules publish measurable
+results. The global stop mechanism further demonstrates that the interactive
+environment can manage concurrent demonstrations without sacrificing shell
+responsiveness.
+
+The resulting system meets its educational purpose while maintaining a clear
+technical boundary: it is a cooperative, kernel-space course project rather
+than a production operating system. Within that scope, the bootable ISO,
+interactive tools, documented commands, and verification results provide a
+credible and repeatable demonstration of the underlying operating-system
+principles.
