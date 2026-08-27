@@ -15,7 +15,7 @@ terminal, OS Lab, and live status views.
 | Deliverable | Link |
 |---|---|
 | Bootable operating system | [Download `jas-os.iso`](jas-os.iso) |
-| Demonstration video | [4:20 narrated overview](docs/JAS-OS-demo.mp4) |
+| Demonstration video | <video controls width="100%"><source src="Demonstration%20video.mp4" type="video/mp4">Your browser does not support embedded video.</video> |
 | Editable demonstration | [PowerPoint with narration](docs/JAS-OS-Demonstration.pptx) |
 | Technical report | [PDF](docs/JAS-OS-Technical-Report.pdf) · [Editable DOCX](docs/JAS-OS-Technical-Report.docx) · [GitHub-readable STAR report](docs/TECHNICAL_REPORT.md) |
 | Presentation support | [Timed narration and command script](docs/DEMO_SCRIPT.md) |
