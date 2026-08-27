@@ -145,12 +145,14 @@ Result (STAR) structure.
 
 ### Challenge 1 — Building a bootable x86 ISO
 
-**Situation:** The project needed to boot as a PC operating system in Oracle
-VirtualBox rather than rely on a host operating system or standard library.
+**Situation:** Before starting the x86 version, I was developing an ESP32-S3
+mini-kernel for CSE 323. That earlier work ran on a microcontroller platform,
+but this project required a PC operating system that could boot independently
+from an ISO in Oracle VirtualBox.
 
-**Task:** Preserve the relevant operating-system components without a host
-operating system or standard library and provide keyboard, mouse, and graphical
-output.
+**Task:** Transfer the relevant operating-system concepts into a freestanding
+x86 environment without a host operating system or standard library, while also
+providing keyboard, mouse, and graphical output.
 
 **Action:** The implementation introduced a BIOS/El Torito loader, VESA
 framebuffer setup, A20 handling, a GDT, and a protected-mode transition. It then
