@@ -15,7 +15,7 @@ terminal, OS Lab, and live status views.
 | Deliverable | Link |
 |---|---|
 | Bootable operating system | [Download `jas-os.iso`](jas-os.iso) |
-| Demonstration video | <video controls width="100%"><source src="Demonstration%20video.mp4" type="video/mp4">Your browser does not support embedded video.</video> |
+| Demonstration video | [Open demonstration video on GitHub](https://github.com/Jubayed-Sahel/JAS-OS/blob/main/Demonstration%20video.mp4) |
 | Editable demonstration | [PowerPoint with narration](docs/JAS-OS-Demonstration.pptx) |
 | Technical report | [PDF](docs/JAS-OS-Technical-Report.pdf) · [Editable DOCX](docs/JAS-OS-Technical-Report.docx) · [GitHub-readable STAR report](docs/TECHNICAL_REPORT.md) |
 | Presentation support | [Timed narration and command script](docs/DEMO_SCRIPT.md) |
@@ -23,6 +23,10 @@ terminal, OS Lab, and live status views.
 | Submission checklist | [Final checklist](SUBMISSION.md) |
 
 Repository: <https://github.com/Jubayed-Sahel/JAS-OS>
+
+<video controls width="100%" src="https://github.com/Jubayed-Sahel/JAS-OS/raw/refs/heads/main/Demonstration%20video.mp4">
+        Your browser does not support embedded video. [Open the demonstration video on GitHub](https://github.com/Jubayed-Sahel/JAS-OS/blob/main/Demonstration%20video.mp4).
+</video>
 
 ## What is implemented
 
