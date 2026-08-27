@@ -15,11 +15,7 @@ terminal, OS Lab, and live status views.
 | Deliverable | Link |
 |---|---|
 | Bootable operating system | [Download `jas-os.iso`](jas-os.iso) |
-| Demonstration video | [Open demonstration video on GitHub](https://github.com/Jubayed-Sahel/JAS-OS/blob/main/Demonstration%20video.mp4) |
-| Editable demonstration | [PowerPoint with narration](docs/JAS-OS-Demonstration.pptx) |
-| Technical report | [PDF](docs/JAS-OS-Technical-Report.pdf) · [Editable DOCX](docs/JAS-OS-Technical-Report.docx) · [GitHub-readable STAR report](docs/TECHNICAL_REPORT.md) |
-| Presentation support | [Timed narration and command script](docs/DEMO_SCRIPT.md) |
-| Architecture | [System architecture notes](docs/ARCHITECTURE.md) |
+| Demonstration video | [![Watch demonstration video](https://img.shields.io/badge/Watch%20demonstration%20video-now-e11d48?logo=youtube&logoColor=white)](https://github.com/Jubayed-Sahel/JAS-OS/blob/main/Demonstration%20video.mp4) |
 | Submission checklist | [Final checklist](SUBMISSION.md) |
 
 Repository: <https://github.com/Jubayed-Sahel/JAS-OS>
@@ -147,8 +143,7 @@ With a powered-off VirtualBox VM named `JAS OS`, run:
 powershell -ExecutionPolicy Bypass -File .\scripts\test_terminal_commands.ps1
 ```
 
-The verified run on 2026-08-22 passed **208/208** checks. Detailed scope and
-results are recorded in [`docs/TERMINAL_TEST_REPORT.md`](docs/TERMINAL_TEST_REPORT.md).
+The verified run on 2026-08-22 passed **208/208** checks.
 
 ## Terminal command reference
 
