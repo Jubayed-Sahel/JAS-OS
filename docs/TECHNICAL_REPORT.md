@@ -72,6 +72,11 @@ hardware drivers, or permanent disk-backed persistence.
 The boot sequence establishes the execution environment before the kernel
 initializes its device and service layers:
 
+**How to read the architecture:** The numbered flow moves from left-to-right
+boot preparation into kernel services and finally into the user-facing
+demonstration layer. The table that follows explains what each layer does and
+what evidence a reader can observe.
+
 ```text
   [1] BIOS / El Torito ISO
           |
