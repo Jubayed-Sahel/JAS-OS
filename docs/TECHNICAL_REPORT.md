@@ -176,6 +176,61 @@ scheduler state. Controls for individual laboratories remain available.
 **Result:** `stop`, `stop all`, `lab stop`, and the red STOP button end terminal
 background activity while the shell remains ready for the next command.
 
+### Challenge 5 — Debugging without normal operating-system tools
+
+**Situation:** A freestanding kernel cannot depend on a host terminal, standard
+library, desktop debugger, or operating-system error dialog while it is running.
+A small mistake in initialization can therefore prevent the system from
+reaching the graphical interface at all.
+
+**Task:** Locate failures in boot, interrupt handling, input, and kernel logic
+with limited runtime visibility.
+
+**Action:** Serial output and the framebuffer were used as complementary
+diagnostic channels. Initialization stages were kept explicit, and the
+terminal's live status commands were used to inspect scheduler, memory, paging,
+storage, and I/O state after the system booted.
+
+**Result:** Failures could be narrowed to a boot stage or subsystem instead of
+being treated as an unexplained blank screen. This also made the same diagnostic
+information useful during the final demonstration.
+
+### Challenge 6 — Connecting kernel state to a usable interface
+
+**Situation:** Implementing an algorithm was only part of the assignment. The
+result also had to be understandable to someone viewing the desktop and
+terminal during a short assessment.
+
+**Task:** Present changing kernel state without duplicating the implementation
+or replacing it with hard-coded demonstration output.
+
+**Action:** Commands were designed around the state already maintained by each
+kernel module. The terminal and OS Lab then invoked those commands, while
+status views displayed values such as task states, semaphore counts, heap
+statistics, page faults, and I/O counters.
+
+**Result:** The interface became an inspection layer over the kernel rather than
+a separate collection of simulated screens. A feature could be demonstrated,
+examined, and explained using the same underlying state.
+
+### Challenge 7 — Managing breadth within a student project
+
+**Situation:** The project covered many syllabus areas, but each additional
+feature increased the chance of regressions in shared code such as task
+management, terminal input, and scheduling.
+
+**Task:** Deliver broad coverage while keeping the system bootable and the
+demonstration route predictable.
+
+**Action:** Features were organized into separate kernel modules with explicit
+commands and shutdown paths. The demonstration route was kept short, and
+stateful commands were tested with both successful and invalid inputs before
+being included in the final workflow.
+
+**Result:** The project achieved broad operating-system coverage without making
+the assessment depend on an unstructured sequence of manual steps. The modular
+boundaries also made individual problems easier to isolate and correct.
+
 ## 6. Verification and Results
 
 - The freestanding kernel builds without warnings or errors using the included
