@@ -17,6 +17,10 @@ system concepts observable through live state rather than static interface
 labels, including task scheduling, synchronization, memory allocation, paging,
 deadlock avoidance, file management, storage algorithms, and I/O models.
 
+> **At a glance:** JAS OS turns operating-system theory into an interactive
+> x86 system. Boot, kernel services, algorithms, and interface controls are
+> connected so that each concept can be demonstrated and measured directly.
+
 ## Introduction
 
 Operating-system concepts are easiest to understand when their results can be
@@ -69,18 +73,38 @@ The boot sequence establishes the execution environment before the kernel
 initializes its device and service layers:
 
 ```text
-BIOS / El Torito ISO
-  |
-16-bit loader: sectors, VESA, A20, and GDT
-  |
-32-bit protected mode and freestanding C kernel
-  |
-IDT, PIC, PIT, serial, PS/2 input, and framebuffer
-  |
-tasks, scheduler, synchronization, memory, paging, MiniFS, storage, and I/O
-  |
-desktop, applications, terminal, and OS Lab
+  [1] BIOS / El Torito ISO
+          |
+          v
+  [2] 16-bit loader
+      sectors | VESA | A20 | GDT
+          |
+          v
+  [3] 32-bit protected mode
+      freestanding C kernel
+          |
+          v
+  [4] Hardware and kernel foundations
+      IDT | PIC | PIT | serial | PS/2 | framebuffer
+          |
+          v
+  [5] Operating-system services
+      tasks | scheduler | sync | memory | paging
+      MiniFS | storage | I/O
+          |
+          v
+  [6] User-facing demonstration layer
+      desktop | applications | Terminal | OS Lab
 ```
+
+Each layer has a distinct responsibility and a visible outcome:
+
+| Layer | Responsibility | Visible outcome |
+|---|---|---|
+| Boot | Load the kernel and establish protected mode | Boot trace and working ISO |
+| Hardware foundations | Initialize interrupts, timer, input, serial, and graphics | Responsive desktop and diagnostic output |
+| Kernel services | Manage tasks, resources, files, storage, and I/O | Live counters, states, and algorithm results |
+| Demonstration layer | Expose services through commands and controls | Repeatable terminal and OS Lab workflows |
 
 The principal feature areas are summarized below.
 
