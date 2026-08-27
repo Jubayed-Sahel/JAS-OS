@@ -283,13 +283,23 @@ This procedure supports transparent classroom evaluation: each command routes to
 the corresponding kernel module, and resulting state changes can be observed in
 the terminal or OS Lab interface.
 
-## 7. Project Deliverables
+## 7. GitHub Links
+
+| Resource | Direct link |
+|---|---|
+| Repository | [JAS OS on GitHub](https://github.com/Jubayed-Sahel/JAS-OS) |
+| Source code | [Browse the kernel source](https://github.com/Jubayed-Sahel/JAS-OS/tree/main/kernel) |
+| Project README | [Read the project overview](https://github.com/Jubayed-Sahel/JAS-OS/blob/main/README.md) |
+| Technical report | [Markdown report](https://github.com/Jubayed-Sahel/JAS-OS/blob/main/docs/TECHNICAL_REPORT.md) · [PDF report](https://github.com/Jubayed-Sahel/JAS-OS/blob/main/docs/JAS-OS-Technical-Report.pdf) |
+| Demonstration | [Watch the demonstration video](https://github.com/Jubayed-Sahel/JAS-OS/blob/main/Demonstration%20video.mp4) |
+
+## 8. Project Deliverables
 
 - GitHub repository: <https://github.com/Jubayed-Sahel/JAS-OS>
 - Bootable ISO: [`jas-os.iso`](../jas-os.iso)
 - Narrated demonstration: [Watch the demonstration video](https://github.com/Jubayed-Sahel/JAS-OS/blob/main/Demonstration%20video.mp4)
 
-## 8. Limitations and Scope Boundary
+## 9. Limitations and Scope Boundary
 
 JAS OS is an educational course-project kernel, not a production operating
 system. Tasks are cooperative, applications execute in kernel space, and MiniFS
@@ -297,7 +307,7 @@ is RAM-backed. Paging, disk, RAID, and I/O are transparent software models.
 Accordingly, the project does not claim ring-3 isolation, production device
 drivers, networking, persistent storage, or production security.
 
-## 9. Conclusion
+## 10. Conclusion
 
 JAS OS demonstrates that a compact freestanding x86 kernel can present a broad
 set of operating-system concepts through one coherent, interactive platform.
