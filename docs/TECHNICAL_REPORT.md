@@ -143,122 +143,127 @@ the terminal available for further interaction.
 The following challenges are documented using the Situation, Task, Action, and
 Result (STAR) structure.
 
+**STAR reading key:** **[SITUATION]** identifies the problem context,
+**[TASK]** states the required objective, **[ACTION]** records the engineering
+response, and **[RESULT]** summarizes the outcome. These markers are repeated
+for every challenge so the report can be scanned quickly.
+
 ### Challenge 1 — Building a bootable x86 ISO
 
-**Situation:** Before starting the x86 version, I was developing an ESP32-S3
+**[SITUATION]** Before starting the x86 version, I was developing an ESP32-S3
 mini-kernel for CSE 323. That earlier work ran on a microcontroller platform,
 but this project required a PC operating system that could boot independently
 from an ISO in Oracle VirtualBox.
 
-**Task:** Transfer the relevant operating-system concepts into a freestanding
+**[TASK]** Transfer the relevant operating-system concepts into a freestanding
 x86 environment without a host operating system or standard library, while also
 providing keyboard, mouse, and graphical output.
 
-**Action:** The implementation introduced a BIOS/El Torito loader, VESA
+**[ACTION]** The implementation introduced a BIOS/El Torito loader, VESA
 framebuffer setup, A20 handling, a GDT, and a protected-mode transition. It then
 added IDT/PIC/PIT support, serial output, PS/2 input, graphics, and freestanding
 runtime modules.
 
-**Result:** JAS OS boots from its own ISO into an interactive 1024x768 desktop,
+**[RESULT]** JAS OS boots from its own ISO into an interactive 1024x768 desktop,
 and the cross-compiler build completes without warnings or errors.
 
 ### Challenge 2 — Producing live evidence instead of static labels
 
-**Situation:** Static interface labels would not show whether the algorithms
+**[SITUATION]** Static interface labels would not show whether the algorithms
 were connected to changing system state.
 
-**Task:** Connect every major subsystem to stateful code and observable results.
+**[TASK]** Connect every major subsystem to stateful code and observable results.
 
-**Action:** Scheduling, tasks, synchronization, memory, paging, Banker's
+**[ACTION]** Scheduling, tasks, synchronization, memory, paging, Banker's
 algorithm, files, storage, and I/O were separated into focused kernel modules.
 The interface exposes task states, timelines, semaphore values, heap
 statistics, safe sequences, page faults, disk-head movement, and I/O counters.
 
-**Result:** Each feature has a terminal command and OS Lab button backed by live
+**[RESULT]** Each feature has a terminal command and OS Lab button backed by live
 kernel state, making state changes and algorithm results directly observable.
 
 ### Challenge 3 — Organizing demonstrations during assessment
 
-**Situation:** The command set became difficult to remember, and background
+**[SITUATION]** The command set became difficult to remember, and background
 output could hide the result being discussed.
 
-**Task:** Make implementation evidence easy to find without replacing the
+**[TASK]** Make implementation evidence easy to find without replacing the
 underlying algorithms with static interface text.
 
-**Action:** The Feature Guide, Modules screen, readable terminal layout,
+**[ACTION]** The Feature Guide, Modules screen, readable terminal layout,
 scrolling controls, and OS Lab shortcuts were added. Each path leads to a direct
 command for a specific kernel subsystem.
 
-**Result:** The interface now provides a consistent route from a feature name to
+**[RESULT]** The interface now provides a consistent route from a feature name to
 its source-backed live result.
 
 ### Challenge 4 — Stopping every background task safely
 
-**Situation:** Producer-consumer, thread, readers-writers, and counter jobs can
+**[SITUATION]** Producer-consumer, thread, readers-writers, and counter jobs can
 all generate asynchronous terminal output. The old stop action controlled only
 one demonstration.
 
-**Task:** Stop all background activity without terminating the shell.
+**[TASK]** Stop all background activity without terminating the shell.
 
-**Action:** The global stop handler calls each laboratory's normal shutdown,
+**[ACTION]** The global stop handler calls each laboratory's normal shutdown,
 scans the task table, terminates remaining non-shell tasks, and restores
 scheduler state. Controls for individual laboratories remain available.
 
-**Result:** `stop`, `stop all`, `lab stop`, and the red STOP button end terminal
+**[RESULT]** `stop`, `stop all`, `lab stop`, and the red STOP button end terminal
 background activity while the shell remains ready for the next command.
 
 ### Challenge 5 — Debugging without normal operating-system tools
 
-**Situation:** A freestanding kernel cannot depend on a host terminal, standard
+**[SITUATION]** A freestanding kernel cannot depend on a host terminal, standard
 library, desktop debugger, or operating-system error dialog while it is running.
 A small mistake in initialization can therefore prevent the system from
 reaching the graphical interface at all.
 
-**Task:** Locate failures in boot, interrupt handling, input, and kernel logic
+**[TASK]** Locate failures in boot, interrupt handling, input, and kernel logic
 with limited runtime visibility.
 
-**Action:** Serial output and the framebuffer were used as complementary
+**[ACTION]** Serial output and the framebuffer were used as complementary
 diagnostic channels. Initialization stages were kept explicit, and the
 terminal's live status commands were used to inspect scheduler, memory, paging,
 storage, and I/O state after the system booted.
 
-**Result:** Failures could be narrowed to a boot stage or subsystem instead of
+**[RESULT]** Failures could be narrowed to a boot stage or subsystem instead of
 being treated as an unexplained blank screen. This also made the same diagnostic
 information useful during the final demonstration.
 
 ### Challenge 6 — Connecting kernel state to a usable interface
 
-**Situation:** Implementing an algorithm was only part of the assignment. The
+**[SITUATION]** Implementing an algorithm was only part of the assignment. The
 result also had to be understandable to someone viewing the desktop and
 terminal during a short assessment.
 
-**Task:** Present changing kernel state without duplicating the implementation
+**[TASK]** Present changing kernel state without duplicating the implementation
 or replacing it with hard-coded demonstration output.
 
-**Action:** Commands were designed around the state already maintained by each
+**[ACTION]** Commands were designed around the state already maintained by each
 kernel module. The terminal and OS Lab then invoked those commands, while
 status views displayed values such as task states, semaphore counts, heap
 statistics, page faults, and I/O counters.
 
-**Result:** The interface became an inspection layer over the kernel rather than
+**[RESULT]** The interface became an inspection layer over the kernel rather than
 a separate collection of simulated screens. A feature could be demonstrated,
 examined, and explained using the same underlying state.
 
 ### Challenge 7 — Managing breadth within a student project
 
-**Situation:** The project covered many syllabus areas, but each additional
+**[SITUATION]** The project covered many syllabus areas, but each additional
 feature increased the chance of regressions in shared code such as task
 management, terminal input, and scheduling.
 
-**Task:** Deliver broad coverage while keeping the system bootable and the
+**[TASK]** Deliver broad coverage while keeping the system bootable and the
 demonstration route predictable.
 
-**Action:** Features were organized into separate kernel modules with explicit
+**[ACTION]** Features were organized into separate kernel modules with explicit
 commands and shutdown paths. The demonstration route was kept short, and
 stateful commands were tested with both successful and invalid inputs before
 being included in the final workflow.
 
-**Result:** The project achieved broad operating-system coverage without making
+**[RESULT]** The project achieved broad operating-system coverage without making
 the assessment depend on an unstructured sequence of manual steps. The modular
 boundaries also made individual problems easier to isolate and correct.
 
